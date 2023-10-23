@@ -1,0 +1,3 @@
+NOTES:
+you need to copy and paste the MACROS files into the macros folder of fiji-imagej
+PLUGINS files need to be in the Plugins folder in fiji-imagej

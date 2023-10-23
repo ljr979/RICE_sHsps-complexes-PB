@@ -1,0 +1,13 @@
+ for (i = 0; i < nResults; i++) 
+   { 
+      // You may need to change the "frame", etc strings to match your csv file. 
+      slice = getResult("Slice", i); 
+      x = getResult("X2", i); 
+      y = getResult("Y2", i); 
+
+      // Using square ROI of size 1x1 pixels centered around your coordinate. 
+      run("Specify...", "width=1 height=1 x=&x y=&y slice=&slice centered"); 
+
+      // Add to the ROI manager. 
+      roiManager("Add"); 
+   } 
