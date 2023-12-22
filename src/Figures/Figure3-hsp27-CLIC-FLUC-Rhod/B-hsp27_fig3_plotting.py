@@ -55,15 +55,6 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     FLUC=pd.concat(FLUC)
     return CLIC, FLUC, RHOD
 
-files=[item for item in os.listdir(input_folder)]
-grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
-#filter and organise, and then save these
-CLIC, FLUC , RHOD= filter_for_client_hsp27(input_folder, files, grouping_dict)
-
-CLIC.to_csv(f'{output_folder}CLIC.csv')
-FLUC.to_csv(f'{output_folder}FLUC.csv')
-RHOD.to_csv(f'{output_folder}RHOD.csv')
-
 def plotting(df, protein, palette, output_folder):
     #melt dataframe
     dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
@@ -88,6 +79,14 @@ def plotting(df, protein, palette, output_folder):
     plt.show()
 
 
+files=[item for item in os.listdir(input_folder)]
+grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
+#filter and organise, and then save these
+CLIC, FLUC , RHOD= filter_for_client_hsp27(input_folder, files, grouping_dict)
+
+CLIC.to_csv(f'{output_folder}CLIC.csv')
+FLUC.to_csv(f'{output_folder}FLUC.csv')
+RHOD.to_csv(f'{output_folder}RHOD.csv')
 
 #these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
     
