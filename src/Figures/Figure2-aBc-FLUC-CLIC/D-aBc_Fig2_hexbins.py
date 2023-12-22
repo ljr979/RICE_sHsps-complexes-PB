@@ -85,6 +85,22 @@ def create_custom_colourmap(cmap, n_colors):
     return cm
 
 def plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cmap_axes):      
+    """PLOTS the hexbins as however many timepoints as you had.
+
+    Args:
+        fig (fig): initialised out of function
+        axes (axes): see fig
+        counts_collated (df): dataframe with matched collated counts
+        vmin (int ): this and vmax normalises the colour scale across all times so the intensity is relative between them to account for different number of observations
+        vmax (int): max for normalisation
+        xlimo (int): x limit
+        ylimo (int): y limit
+        cm (str): colourmap of choice
+        cmap_axes (int): where to put the colormap (this has to be the bottom of the figure in this setup, so it is the number of rows in the figure, indexed to -1)
+
+    Returns:
+        fig, axes: the figure!
+    """
     #now make it into subplots with normalised NUMBER OF OBSERVATIONS in each hex!!!!!
     # Setup figure with added gridspec to carve out an individual axes for the shared cbar
     for x, (timepoint, df) in enumerate(counts_collated.groupby('timepoint (min)')):
