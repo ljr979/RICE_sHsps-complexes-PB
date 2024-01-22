@@ -1,5 +1,5 @@
 
-#below script is to PLOT the distributions of the molecule sizes in a violin plot
+# to PLOT the distributions of the molecule sizes in a violin plot
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd

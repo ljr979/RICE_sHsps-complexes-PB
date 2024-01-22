@@ -43,11 +43,6 @@ Hsp-AF488/
 
 
 
-
-
-
-
-
 ----------------------------------------------------------------------------------
 
 CODE BASE
@@ -69,3 +64,5 @@ macros-required/
 one-channel/
 1_trajectory_analysis.py
 - this script is run to feed your x_traj.csv files to py4bleaching. Send it to the location of the single condition e.g. data/imagej_data/controls/Client-AF647/ AND IT WILL FIN
+
+# WORKFLOW

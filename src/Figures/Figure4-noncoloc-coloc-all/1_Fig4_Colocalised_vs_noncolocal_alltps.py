@@ -7,7 +7,7 @@ import seaborn as sns
 from loguru import logger
 #this script just organises the data for plotting in the next plots. gathers the data which was cleaned and organised in preparation for figures2 and 3, and then combines non colocalised and colocalised files but with separate names so we can split them, and makes sure ALL timepoints are here (in figs 2 and 3, we only had the start and end of the experiment)
 
-input_folder= 'data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/'
+input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/'
 output_folder='python_results/Figure_4/'
 
 if not os.path.exists(output_folder):
@@ -23,9 +23,16 @@ stoich_files_coloc=[item for sublist in stoich_files_coloc for item in sublist ]
 collated_stoich_files=stoich_files_noncoloc+stoich_files_coloc
 
 
-#Experiment_number='Experiment_65_4'
-def read_counts_all(collated_stoich_files):
 
+def read_counts_all(collated_stoich_files):
+    """reads in the counts files, concatinates and matches the columns so they can be combined. fixes timepoints that were labelled unusually.
+
+    Args:
+        collated_stoich_files (list): the list of files that are non colocalised or colocalised counts
+
+    Returns:
+        df: df with all the combined dataframes
+    """
     alls=[]
     for filename in collated_stoich_files:
         count=pd.read_csv(f'{filename}')
@@ -38,15 +45,14 @@ def read_counts_all(collated_stoich_files):
         count['pair']=pair
         count=count.rename(columns={'molecule_number':'Molecule_number','timepoint':'Timepoint','protein':'Protein','colocalisation':'Colocalisation', 'pair':'Pair'})
 
-
-        #count.drop([col for col in count.columns.tolist() if col not in cols_to_keep],axis=1, inplace=True)
-
         alls.append(count)
     alls=pd.concat(alls)
-
+    #dictionary to map the timepoints so that they are labelled the same (labelled in correctly for one replicate )
     tp_dict={0: 0, 15:20, 20:20, 30:40, 40:40, 60: 60, 180:240, 240:240, 420:420}
     
+
     alls['Timepoint']=alls['Timepoint'].map(tp_dict)
+    #rename the pairs, as they were different between colocal and non-colocal and want them to be matching for plotting
     pairs_dict={
         'CLIC_aBc':'CLIC_aB-c',
         'FLUC_aBc': 'FLUC_aB-c', 

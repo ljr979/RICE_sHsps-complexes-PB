@@ -58,8 +58,18 @@ def fix_backslash(listo):
     return l
 
 def read_trajectories(hsp_traj, client_traj):
+    """reads in trajectories for clients and hsps, and matches them (i.e. tells you they are in complexes)
+
+    Args:
+        hsp_traj (list): this is a list of paths, to files that contain trajectories
+        client_traj (list  ): same as hsp, but for client folder
+
+    Returns:
+        df: new dataframe with all trajectories, with names indicating whether they are matched or not
+    """
     new = []
     for trajectory in hsp_traj:
+        #read in trajectory path
         hsp_trajectories = pd.read_csv(trajectory)
         hsp_trajectories.columns = [
             str(col) + '_hsp' for col in hsp_trajectories.columns]
@@ -77,10 +87,13 @@ def read_trajectories(hsp_traj, client_traj):
             for item1 in client_trajectories:
                 client_trajectory = client_trajectories[[item1]]
                 clientnumber = item1.split('_')[1]
+                #do they match?
                 if hspnumber == clientnumber:
+                    #if they do match, join them together
                     newtraj = trajectory_hsp.join(client_trajectory)
                     newtraj = newtraj.T
                     newtraj['path_info'] = trajectory
+                    #assign a random number so they don't get duplicated
                     newtraj['identifier'] = random.randint(1, 10000000)
                     newtraj['timepoint (min)'] = trajectory.split('/')[-4].split('_')[-1]
 
@@ -91,6 +104,7 @@ def read_trajectories(hsp_traj, client_traj):
     new = pd.concat(new)
     new['identifier']=new['identifier'].astype(str)
     new['new_name'] = new['molecule_number']+'_' + new['identifier']+ '_' +new['timepoint (min)']
+    #assign new molecule name
     new['molecule_number'] = [f'{molecule_number}_{x}' for x, molecule_number in enumerate(new['new_name'])]
 
     return new
@@ -100,6 +114,7 @@ def make_directory(o):
         os.makedirs(o)
 
 def reshape_data(df):
+
     df = df.T
     df.columns = df.iloc[0]
     df = df.tail(df.shape[0] - 1)
@@ -108,12 +123,14 @@ def reshape_data(df):
 
 for tp_folder in timepoint_folders:
     input_folder=f'{inputt}{tp_folder}/'
+    #collect all trajectories files from hsp and client
     hsp_traj, client_traj=grab_trajectories_paths_only(inputt,client, hsp, tp_folder)
     hsp_trajs = [item for sublist in hsp_traj for item in sublist]
     client_traj = [item for sublist in client_traj for item in sublist]
+    #fix slashes so they match and can be split upon
     hsp_traj=fix_backslash(listo=hsp_trajs)
     client_traj=fix_backslash(listo=client_traj)
-
+    #read, clean, match trajectories, give new names
     named_trajectories=read_trajectories(hsp_traj, client_traj)
     #save this version as a checkpoint  
     named_trajectories.to_csv(f'{output_folder}renamed_trajectories_all.csv')

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
 
-
+#this script finds the molecules that are colocalised (in complexes) and quantifies this for each timepoint
 input_folder = 'data/example_python_output/two-colour/'
 output_folder = 'python_results/colocalisation/'
 
@@ -15,12 +15,13 @@ output_folder = 'python_results/colocalisation/'
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
+#find the df containing cleaned colocalisation data
 data_files = [[f'{root}/{filename}' for filename in files if 'cleaned_data.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
 
 data_files = [item for sublist in data_files for item in sublist if 'two-colour' in item]
 
 
-#this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if i want
+#this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if required
 def collate(data_files):
     """this function acts to gather the cleaned trajectories that came from py4bleaching, and to split up the molecule name into metadata that is easier to filter for later.
 
@@ -50,6 +51,7 @@ def collate(data_files):
 
 
 def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
+    #for each timepoint find the total number of HSPS (this script is not client molecules) that are colocalised and report as a %. append this to a list for each timepoint
     #find % colocalisation for shsps over time
     for timepoint in timepoints:
         timepoint
@@ -82,6 +84,7 @@ def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_h
 
 
 def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
+    #
     #find % colocalisation for client over time
     for timepoint in timepoints:
         timepoint
@@ -109,7 +112,9 @@ def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, thr
 
 
 def scatter_plot_client(for_plotting, output_folder):
+    #filter for only the client colocalisation
     client_only = for_plotting[for_plotting['protein'] == 'client']
+    #plot as a scatterplot
     ax = plt.scatter(x=client_only['timepoint'],
                      y=client_only['value'],
                      c='darkviolet')
@@ -143,15 +148,18 @@ seven_hour = []
 zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_sHsp_coloc(
     timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
 
+
 zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_client_coloc(
     timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
 
 percent_colocalisation_all = [zero, fifteen,
                               thirty, sixty, four_hour, seven_hour]
+#list names of columns
 column_names = ['timepoint', 'protein', 'total number of proteins',
                 'colocalised proteins', 'percent colocalisation']
 percent_colocalisation_all = pd.DataFrame(
     [item for sublist in percent_colocalisation_all for item in sublist])
+#assign column names based on list defined
 percent_colocalisation_all.columns = column_names
 #save it
 percent_colocalisation_all.to_csv(
@@ -165,5 +173,5 @@ percent_colocalisation_all['timepoint'] = percent_colocalisation_all['timepoint'
 for_plotting = pd.melt(percent_colocalisation_all, id_vars=[
                        'timepoint', 'protein'], value_vars='percent_colocalisation')
 
-#plot and save the scatter plot
+#this plots the colocalisation for this experiment
 scatter_plot_client(for_plotting, output_folder)
