@@ -38,12 +38,6 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     FLUC=pd.concat(FLUC)
     return CLIC, FLUC, RHOD
 
-def filter_outlier(df, threshold_dict):
-    protein=df['Protein'].tolist()[0]
-    threshold=threshold_dict[protein]
-    df = df[df['last_step_mol_count'] < threshold]
-    return df
-
 def plotting(df, protein, palette, output_folder):
     dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
