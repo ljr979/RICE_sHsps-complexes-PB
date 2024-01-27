@@ -7,7 +7,7 @@ import seaborn as sns
 from loguru import logger
 
 
-input_folder= 'data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/start_finish_filtered/'
+input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'
 output_folder='data/Figures/Figure_2/C-violinplots/'
 
 if not os.path.exists(output_folder):
