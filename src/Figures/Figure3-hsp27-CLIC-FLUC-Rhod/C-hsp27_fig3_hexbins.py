@@ -49,7 +49,7 @@ def calc_ratios(counts_collated, pair):
             testo['ratio']=testo['hsp']/testo['client']
             test.append(testo)
     test=pd.concat(test)
-    test.to_csv(f'{output_folder}{pair}stoichiometries_ratios_added.csv')
+    test.to_csv(f'{output_folder}{pair}_ratios_added.csv')
 
     count_num_complexes={}
     dict_ratios={}
