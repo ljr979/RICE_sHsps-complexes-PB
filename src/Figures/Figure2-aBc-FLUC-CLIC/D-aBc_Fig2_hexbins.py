@@ -54,7 +54,7 @@ def calc_ratios(counts_collated, pair):
             test.append(testo)
     test=pd.concat(test)
     #save
-    test.to_csv(f'{output_folder}{pair}stoichiometries_ratios_added.csv')
+    test.to_csv(f'{output_folder}{pair}_ratios_added.csv')
 
     #this find the number of complexes (total) for each timepoint, and the median ratio of sHsp : client
     count_num_complexes={}
