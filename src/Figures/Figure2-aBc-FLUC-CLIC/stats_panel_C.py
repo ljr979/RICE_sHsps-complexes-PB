@@ -51,12 +51,12 @@ if __name__ == "__main__":
         df = pd.read_csv(f'{input_folder}{x}.csv')
         #lets first look at the data where CLIC was incubated with aB-c
         if x in clients:
-            treatment = '+sHsp'
+            treatment='+sHsp'
             #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
             print(x)
-            start_hsp, end_hsp =kruskal_wallis_start_finish(treatment, df=df)
+            start_hsp, end_hsp=kruskal_wallis_start_finish(treatment, df=df)
 
-            treatment = '-sHsp'
+            treatment='-sHsp'
 
             #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
             start_nohsp, end_nohsp =kruskal_wallis_start_finish(treatment, df=df)

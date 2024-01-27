@@ -10,7 +10,15 @@ from scipy import stats
 import scikit_posthocs as sp
 
 def kruskal_wallis(all_ratios_df, pair):
+    """performs test & post hoc (dunns) on the distribution of RATIOS between sHsps and clients at EACH timepoint in the incubation
 
+    Args:
+        all_ratios_df (df): dataframe with all ratios for every complex
+        pair (string): the pair of proteins in the complex
+
+    Returns:
+        df: a dataframe with the p values for each timepoint (each row is a timepoint)
+    """
     #split this up and turn each timepont into an array, so that we can compare between them easily
     zero_tp_group1=all_ratios_df[all_ratios_df['timepoint (min)']==0.]
     zero_tp_group1=np.array(zero_tp_group1['ratio'])
