@@ -63,7 +63,7 @@ def plotting(df, protein, palette, output_folder):
     plt.legend(title=f'Incubation time (h)', loc='upper right')
     plt.title(f'{protein} + hsp27')
 
-    plt.savefig(f'{output_folder}_{protein}_log_hsp27_stoichiometries.svg')
+    #plt.savefig(f'{output_folder}_{protein}_log_hsp27_stoichiometries.svg')
     plt.show()
 
 
