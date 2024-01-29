@@ -9,14 +9,6 @@ from matplotlib import colors
 import seaborn as sns
 from loguru import logger
 
-input_folder='python_output/1_trajectory_analysis/'
-output_folder='src/two-channels/3_stoichiometries/'
-
-#find all molecule_counts files in your input folder (this should be where the py4bleaching output was)
-molecule_count_list = [[f'{root}/{filename}' for filename in files if ' molecule_counts.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
-
-molecule_count_list=[item for sublist in molecule_count_list for item in sublist]
-
 def concat(molecule_count_list):
     """concatinate molecule counts dataframes
 
@@ -33,7 +25,6 @@ def concat(molecule_count_list):
 
     alls=pd.concat(alls)
     return alls
-
 
 def plot_kde(counts_collated, output_folder, pair, xlimo, ylimo, ncols, cmap):
     """plots the subunit counts (matched) as a kde (heatmap)
@@ -71,7 +62,6 @@ def plot_kde(counts_collated, output_folder, pair, xlimo, ylimo, ncols, cmap):
 
     plt.show()
 
-
 def truncate_colormap(cmap, minval=0.1, maxval=0.7, n=50):
     """truncates the colourmap so that the bins that are less populated are not white (shortens the range of the colourmap)
 
@@ -89,17 +79,24 @@ def truncate_colormap(cmap, minval=0.1, maxval=0.7, n=50):
         cmap(np.linspace(minval, maxval, n)))
     return new_cmap
 
-molecule_counts=concat(molecule_count_list)
-molecule_counts.to_csv(f'{output_folder}combined_mol_counts.csv')
+if __name__ == "__main__":    
+    input_folder='python_output/1_trajectory_analysis/'
+    output_folder='src/two-channels/3_stoichiometries/'
+
+    #find all molecule_counts files in your input folder (this should be where the py4bleaching output was)
+    molecule_count_list = [[f'{root}/{filename}' for filename in files if ' molecule_counts.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
+
+    molecule_count_list=[item for sublist in molecule_count_list for item in sublist]
+    molecule_counts=concat(molecule_count_list)
+    molecule_counts.to_csv(f'{output_folder}combined_mol_counts.csv')
 
 
-molecule_pivot=pd.pivot(molecule_counts,index=['treatment', 'Unique_ID'], columns='protein', values='last_step_mol_count').reset_index()
-molecule_pivot['client']=molecule_pivot['client'].astype(float)
-molecule_pivot['hsp']=molecule_pivot['hsp'].astype(float)
-molecule_pivot.to_csv(f'{output_folder}molecule_counts_plots_collated.csv')
+    molecule_pivot=pd.pivot(molecule_counts,index=['treatment', 'Unique_ID'], columns='protein', values='last_step_mol_count').reset_index()
+    molecule_pivot['client']=molecule_pivot['client'].astype(float)
+    molecule_pivot['hsp']=molecule_pivot['hsp'].astype(float)
+    molecule_pivot.to_csv(f'{output_folder}molecule_counts_plots_collated.csv')
 
-
-#-------------------
-#PLOTTING
-#E.G fluc and hsp27, but wahtever you want this to be saved as
-plot_kde(counts_collated=molecule_pivot, output_folder=output_folder, pair='FLUC and hsp27', xlimo=60, ylimo=50, ncols=6, cmap=truncate_colormap('Purples'))
+    #-------------------
+    #PLOTTING
+    #E.G fluc and hsp27, but wahtever you want this to be saved as
+    plot_kde(counts_collated=molecule_pivot, output_folder=output_folder, pair='FLUC and hsp27', xlimo=60, ylimo=50, ncols=6, cmap=truncate_colormap('Purples'))

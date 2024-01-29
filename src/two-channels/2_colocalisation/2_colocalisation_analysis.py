@@ -8,20 +8,6 @@ import seaborn as sns
 from loguru import logger
 
 #this script finds the molecules that are colocalised (in complexes) and quantifies this for each timepoint
-input_folder = 'data/example_python_output/two-colour/'
-output_folder = 'python_results/colocalisation/'
-
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-#find the df containing cleaned colocalisation data
-data_files = [[f'{root}/{filename}' for filename in files if 'cleaned_data.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
-
-data_files = [item for sublist in data_files for item in sublist if 'two-colour' in item]
-
-
-#this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if required
 def collate(data_files):
     """this function acts to gather the cleaned trajectories that came from py4bleaching, and to split up the molecule name into metadata that is easier to filter for later.
 
@@ -48,7 +34,6 @@ def collate(data_files):
 
     molecules = pd.concat(molecules)
     return molecules
-
 
 def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
     #for each timepoint find the total number of HSPS (this script is not client molecules) that are colocalised and report as a %. append this to a list for each timepoint
@@ -82,7 +67,6 @@ def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_h
             seven_hour.append(listo)
     return zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour
 
-
 def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
     #
     #find % colocalisation for client over time
@@ -110,7 +94,6 @@ def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, thr
             seven_hour.append(listo)
     return zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour
 
-
 def scatter_plot_client(for_plotting, output_folder):
     #filter for only the client colocalisation
     client_only = for_plotting[for_plotting['protein'] == 'client']
@@ -128,50 +111,63 @@ def scatter_plot_client(for_plotting, output_folder):
     ax.savefig(f'{output_folder}scatter_percent_colocal')
 
 
-molecules = collate(data_files)
-timepoints = molecules['timepoint'].unique().tolist()
+if __name__ == "__main__":    
+    input_folder = 'data/example_python_output/two-colour/'
+    output_folder = 'python_results/colocalisation/'
 
 
-#split big df into hsp and client again
-shsp = molecules[molecules["protein"] == "hsp27"]
-client = molecules[molecules['protein'] == 'FLUC']
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+    #this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if required
+    #find the df containing cleaned colocalisation data
+    data_files = [[f'{root}/{filename}' for filename in files if 'cleaned_data.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
 
-zero = []
-fifteen = []
-thirty = []
-sixty = []
-three_hour = []
-four_hour = []
-seven_hour = []
+    data_files = [item for sublist in data_files for item in sublist if 'two-colour' in item]
 
-
-zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_sHsp_coloc(
-    timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
+    molecules = collate(data_files)
+    timepoints = molecules['timepoint'].unique().tolist()
 
 
-zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_client_coloc(
-    timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
+    #split big df into hsp and client again
+    shsp = molecules[molecules["protein"] == "hsp27"]
+    client = molecules[molecules['protein'] == 'FLUC']
 
-percent_colocalisation_all = [zero, fifteen,
-                              thirty, sixty, four_hour, seven_hour]
-#list names of columns
-column_names = ['timepoint', 'protein', 'total number of proteins',
-                'colocalised proteins', 'percent colocalisation']
-percent_colocalisation_all = pd.DataFrame(
-    [item for sublist in percent_colocalisation_all for item in sublist])
-#assign column names based on list defined
-percent_colocalisation_all.columns = column_names
-#save it
-percent_colocalisation_all.to_csv(
-    f'{output_folder}percent_colocalisation_all.csv')
+    zero = []
+    fifteen = []
+    thirty = []
+    sixty = []
+    three_hour = []
+    four_hour = []
+    seven_hour = []
 
-#changes the timepoint column from minutes into integers that represent hours, so that the scatter plot is scaled for hours on the x axis correctly (rather than equal distance between timepoints)
-timepoint_dict = {'zero': 0, '15min': 0.25,
-                  '30min': 0.5, '240min': 4, '60min': 1, '420min': 7}
-percent_colocalisation_all['timepoint'] = percent_colocalisation_all['timepoint'].map(
-    timepoint_dict)
-for_plotting = pd.melt(percent_colocalisation_all, id_vars=[
-                       'timepoint', 'protein'], value_vars='percent_colocalisation')
 
-#this plots the colocalisation for this experiment
-scatter_plot_client(for_plotting, output_folder)
+    zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_sHsp_coloc(
+        timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
+
+
+    zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour = calculate_client_coloc(
+        timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour)
+
+    percent_colocalisation_all = [zero, fifteen,
+                                thirty, sixty, four_hour, seven_hour]
+    #list names of columns
+    column_names = ['timepoint', 'protein', 'total number of proteins',
+                    'colocalised proteins', 'percent colocalisation']
+    percent_colocalisation_all = pd.DataFrame(
+        [item for sublist in percent_colocalisation_all for item in sublist])
+    #assign column names based on list defined
+    percent_colocalisation_all.columns = column_names
+    #save it
+    percent_colocalisation_all.to_csv(
+        f'{output_folder}percent_colocalisation_all.csv')
+
+    #changes the timepoint column from minutes into integers that represent hours, so that the scatter plot is scaled for hours on the x axis correctly (rather than equal distance between timepoints)
+    timepoint_dict = {'zero': 0, '15min': 0.25,
+                    '30min': 0.5, '240min': 4, '60min': 1, '420min': 7}
+    percent_colocalisation_all['timepoint'] = percent_colocalisation_all['timepoint'].map(
+        timepoint_dict)
+    for_plotting = pd.melt(percent_colocalisation_all, id_vars=[
+                        'timepoint', 'protein'], value_vars='percent_colocalisation')
+
+    #this plots the colocalisation for this experiment
+    scatter_plot_client(for_plotting, output_folder)

@@ -4,19 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 import os
-#input folder is the folder that the py4bleaching just saved
-input_folder = 'python_results/'
 
-output_folder = 'python_results/'
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-#gather the molecule count files for all the time points
-stoich_files = [[f'{root}/{filename}' for filename in files if 'molecule_counts.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
-#flatten list
-stoich_files = [item for sublist in stoich_files for item in sublist if 'one-colour' in item]
-
-#concatinate any of the same name (molecule_counts) into one big file. This would be e.g. from different time points that are in separate files etc.
 def concatinate_data(stoich_files):
 
     molecule_counts = []
@@ -41,16 +29,32 @@ def concatinate_data(stoich_files):
     ) if col in drop_cols], axis=1, inplace=True)
     return molecule_counts
 
-molecule_counts=concatinate_data(stoich_files)
-df = pd.melt(molecule_counts, id_vars=['protein', 'colocalisation', 'molecule_number',
-                                       'treatment', 'timepoint'], value_vars=['last_step_mol_count'])
 
-ax = sns.violinplot(x="timepoint", y="value",  data=df, order=[
-                    'zero', '20min', '40min', '60min'], scale='width', palette='viridis')
+if __name__ == "__main__":    
+    #input folder is the folder that the py4bleaching just saved
+    input_folder = 'python_results/'
 
-ax.set_ylabel('# of subunits')
-ax.set_ylim(0, max(df['last_step_mol_count']))
-plt.title(f'# of subunits/fluorescent spot')
-plt.savefig(f'{output_folder}_stoichiometries.png')
-plt.show()
+    output_folder = 'python_results/'
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    #gather the molecule count files for all the time points
+    stoich_files = [[f'{root}/{filename}' for filename in files if 'molecule_counts.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
+    #flatten list
+    stoich_files = [item for sublist in stoich_files for item in sublist if 'one-colour' in item]
+
+    #concatinate any of the same name (molecule_counts) into one big file. This would be e.g. from different time points that are in separate files etc.
+
+    molecule_counts=concatinate_data(stoich_files)
+    df = pd.melt(molecule_counts, id_vars=['protein', 'colocalisation', 'molecule_number',
+                                        'treatment', 'timepoint'], value_vars=['last_step_mol_count'])
+
+    ax = sns.violinplot(x="timepoint", y="value",  data=df, order=[
+                        'zero', '20min', '40min', '60min'], scale='width', palette='viridis')
+
+    ax.set_ylabel('# of subunits')
+    ax.set_ylim(0, max(df['last_step_mol_count']))
+    plt.title(f'# of subunits/fluorescent spot')
+    plt.savefig(f'{output_folder}_stoichiometries.png')
+    plt.show()
 

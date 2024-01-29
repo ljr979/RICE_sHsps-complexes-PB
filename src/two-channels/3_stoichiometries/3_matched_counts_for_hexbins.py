@@ -13,17 +13,6 @@ from matplotlib import colors
 
 #this is performed before collating any data. i.e. was run on each individual experiment to output 'molecule_size_for_plotting' which is used to plot the hexbin plots.
 
-
-#location of trajectories (imageJ output)
-input_folder = '/'
-#output location
-output_folder = 'data/Figures/Figure_2/D-matched_hexbins/'
-#location that the py4bleaching analysis output to (example)
-python_input = 'data/example_python_output/two-colour/1_trajectory_analysis/client/'
-
-if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-
 def grab_trajectories_paths_only(input_folder, timepoint_folders):
     hsp_trajectories_paths=[]
     client_trajectories_pahts=[]
@@ -127,56 +116,67 @@ def matched_counts(new, step_sizes_hsp, step_sizes_client):
     molecule_counts.columns = ['molecule_number', 'max_fluorescence', 'molecule_count', 'timepoint (min)', 'path_info', 'UNIQUE_ID']
     return molecule_counts
 
-#these can be changed according to the name assigned to the trajectories
-client='client'
-hsp='Hsp'
-#change this to your experiment identifier
-exp_num = 'experiment_example'
 
-#import the step sizes data that was gathered during trajectory analysis script (for HSP first)
-step_sizes_hsp=pd.read_csv(f'{python_input}hsp/fitting_changepoints/median_steps.csv')
-step_sizes_hsp=step_sizes_hsp.drop([col for col in step_sizes_hsp.columns.tolist() if 'Unnamed: 0' in col],axis=1)
+if __name__ == "__main__":    
+    #location of trajectories (imageJ output)
+    input_folder = '/'
+    #output location
+    output_folder = 'data/Figures/Figure_2/D-matched_hexbins/'
+    #location that the py4bleaching analysis output to (example)
+    python_input = 'data/example_python_output/two-colour/1_trajectory_analysis/client/'
+    if not os.path.exists(output_folder):
+            os.makedirs(output_folder)
 
-#now gather the step sizes from the client analysis
-step_sizes_client=pd.read_csv(f'{python_input}client/fitting_changepoints/median_steps.csv')
-step_sizes_client=step_sizes_client.drop([col for col in step_sizes_client.columns.tolist() if 'Unnamed: 0' in col],axis=1)
+    #these can be changed according to the name assigned to the trajectories
+    client='client'
+    hsp='Hsp'
+    #change this to your experiment identifier
+    exp_num = 'experiment_example'
 
-#find the timepoint folders that the images and trajectories are nested underneath
-timepoint_folders=[folder for folder in os.listdir(f'{input_folder}')if 'beads' not in folder]
+    #import the step sizes data that was gathered during trajectory analysis script (for HSP first)
+    step_sizes_hsp=pd.read_csv(f'{python_input}hsp/fitting_changepoints/median_steps.csv')
+    step_sizes_hsp=step_sizes_hsp.drop([col for col in step_sizes_hsp.columns.tolist() if 'Unnamed: 0' in col],axis=1)
 
-image_folders=[]
+    #now gather the step sizes from the client analysis
+    step_sizes_client=pd.read_csv(f'{python_input}client/fitting_changepoints/median_steps.csv')
+    step_sizes_client=step_sizes_client.drop([col for col in step_sizes_client.columns.tolist() if 'Unnamed: 0' in col],axis=1)
 
-#find the trajectories
-hsp_trajs, clients = grab_trajectories_paths_only(input_folder=input_folder, timepoint_folders=timepoint_folders)
+    #find the timepoint folders that the images and trajectories are nested underneath
+    timepoint_folders=[folder for folder in os.listdir(f'{input_folder}')if 'beads' not in folder]
 
+    image_folders=[]
 
-hsp_trajs=[item for sublist in hsp_trajs for item in sublist]
-clients=[item for sublist in clients for item in sublist]
-
-#make a new dataframe which has given the clients and hsp trajectories matched names
-new=read_trajectories(hsp_trajs,clients)
-
-timepoint_columns = [col for col in new.columns.tolist() if col not in ['molecule_number','path_info','timepoint (min)', 'identifier']]
-
-#turn timepoints into numerical
-timepoint_map={'t0':0, 't15':15, 't30':30, 't60':60, 't240':240, 't420':420}
-new['timepoint (min)']=new['timepoint (min)'].map(timepoint_map)
-
-#calculate molecule size within complexes (matched)
-molecule_counts=matched_counts(new, step_sizes_hsp, step_sizes_client)
+    #find the trajectories
+    hsp_trajs, clients = grab_trajectories_paths_only(input_folder=input_folder, timepoint_folders=timepoint_folders)
 
 
-#pivot the molecule counts data frame so that everything is grouped correctly for plotting (and in longform for seaborn)
-molecule_counts['molecule_type']= molecule_counts['molecule_number'].str.split('_').str[-2]
-#save this sorted dataframe before pivoting
-molecule_counts.to_csv(f'{output_folder}molecule_counts_sorted.csv')
+    hsp_trajs=[item for sublist in hsp_trajs for item in sublist]
+    clients=[item for sublist in clients for item in sublist]
 
-molecule_pivot=pd.pivot(molecule_counts,index=['timepoint (min)', 'UNIQUE_ID'], columns='molecule_type', values='molecule_count').reset_index()
-#make sure the mol number is a float
-molecule_pivot['client']=molecule_pivot['client'].astype(float)
-molecule_pivot['hsp']=molecule_pivot['hsp'].astype(float)
-#when the counts were turned into integers, the smaller step ones turned into zeros, so need to make them =1  in order to plot this
-molecule_pivot['hsp']=molecule_pivot['hsp'].mask(molecule_pivot['hsp']==0).fillna(1)
-#save for plotting!
-molecule_pivot.to_csv(f'{output_folder}{exp_num}_molecule_counts_for_plotting.csv')
+    #make a new dataframe which has given the clients and hsp trajectories matched names
+    new=read_trajectories(hsp_trajs,clients)
+
+    timepoint_columns = [col for col in new.columns.tolist() if col not in ['molecule_number','path_info','timepoint (min)', 'identifier']]
+
+    #turn timepoints into numerical
+    timepoint_map={'t0':0, 't15':15, 't30':30, 't60':60, 't240':240, 't420':420}
+    new['timepoint (min)']=new['timepoint (min)'].map(timepoint_map)
+
+    #calculate molecule size within complexes (matched)
+    molecule_counts=matched_counts(new, step_sizes_hsp, step_sizes_client)
+
+
+    #pivot the molecule counts data frame so that everything is grouped correctly for plotting (and in longform for seaborn)
+    molecule_counts['molecule_type']= molecule_counts['molecule_number'].str.split('_').str[-2]
+    #save this sorted dataframe before pivoting
+    molecule_counts.to_csv(f'{output_folder}molecule_counts_sorted.csv')
+
+    molecule_pivot=pd.pivot(molecule_counts,index=['timepoint (min)', 'UNIQUE_ID'], columns='molecule_type', values='molecule_count').reset_index()
+    #make sure the mol number is a float
+    molecule_pivot['client']=molecule_pivot['client'].astype(float)
+    molecule_pivot['hsp']=molecule_pivot['hsp'].astype(float)
+    #when the counts were turned into integers, the smaller step ones turned into zeros, so need to make them =1  in order to plot this
+    molecule_pivot['hsp']=molecule_pivot['hsp'].mask(molecule_pivot['hsp']==0).fillna(1)
+    #save for plotting!
+    molecule_pivot.to_csv(f'{output_folder}{exp_num}_molecule_counts_for_plotting.csv')
 

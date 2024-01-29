@@ -6,21 +6,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
 import random
-
 #this input should be the location of raw trajectory files, for coloc and non-colocalised proteins (both client and sHsp), at each timepoint.(/Trajectories folder content from the imagej processing script). 
 #this should be structured as /data/timepoint/coloc&non-coloc/.csv files (these files should be numbered / labelled as the NAME)
-
-inputt= 'data/example_raw_trajectory_data/'
-output_folder = 'python_results/'
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-client = 'Client'
-hsp = 'Hsp'
-
-timepoint_folders = [folder for folder in os.listdir(f'{inputt}')if 'beads' not in folder]
-
 
 def grab_trajectories_paths_only(inputt, client, hsp, tp_folder):
     """Function to grab all trajectory files and filter for those only colocalised.
@@ -121,37 +108,50 @@ def reshape_data(df):
     return df
 
 
-for tp_folder in timepoint_folders:
-    input_folder=f'{inputt}{tp_folder}/'
-    #collect all trajectories files from hsp and client
-    hsp_traj, client_traj=grab_trajectories_paths_only(inputt,client, hsp, tp_folder)
-    hsp_trajs = [item for sublist in hsp_traj for item in sublist]
-    client_traj = [item for sublist in client_traj for item in sublist]
-    #fix slashes so they match and can be split upon
-    hsp_traj=fix_backslash(listo=hsp_trajs)
-    client_traj=fix_backslash(listo=client_traj)
-    #read, clean, match trajectories, give new names
-    named_trajectories=read_trajectories(hsp_traj, client_traj)
-    #save this version as a checkpoint  
-    named_trajectories.to_csv(f'{output_folder}renamed_trajectories_all.csv')
-    #make a list of the columns that ARENT molecule_name and drop all of them!!! because this is the ONLY col you can have in py4bleaching
-    test=['identifier','path_info','timepoint (min)','new_name']
-    testo=named_trajectories.drop(columns=[col for col in named_trajectories if col in test])
+if __name__ == "__main__":    
 
-    #now we want to FILTER and resave the trajectories as separate dataframes (remembering they're different fluorophores and as such neeeded to be analysed for photobleaching spearately.)
-    #define outputs that nests them correctly for feeding into py4bleaching
-    hsp_output = f'{output_folder}/shsp/{tp_folder}/coloc/'
-    client_output = f'{output_folder}/client/{tp_folder}/coloc/'
-    #create these directories
-    make_directory(o=hsp_output)
-    make_directory(o=client_output)
+    inputt= 'data/example_raw_trajectory_data/'
+    output_folder = 'python_results/'
 
-    #filter for hsp or client only based on the molecule name, then reshape the data so it fits with the way we read it in in py4bleaching
-    hsp_only = testo[~testo['molecule_number'].str.contains('client')]
-    hsp_only=reshape_data(df=hsp_only)
-    client_only = testo[~testo['molecule_number'].str.contains('hsp')]
-    client_only=reshape_data(df=client_only)
-    #save them to the outputs you just made
-    hsp_only.to_csv(f'{hsp_output}hsp_coloc_traj.csv')
-    client_only.to_csv(f'{client_output}client_coloc_traj.csv')
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    client = 'Client'
+    hsp = 'Hsp'
+
+    timepoint_folders = [folder for folder in os.listdir(f'{inputt}')if 'beads' not in folder]
+
+    for tp_folder in timepoint_folders:
+        input_folder=f'{inputt}{tp_folder}/'
+        #collect all trajectories files from hsp and client
+        hsp_traj, client_traj=grab_trajectories_paths_only(inputt, client, hsp, tp_folder)
+        hsp_trajs = [item for sublist in hsp_traj for item in sublist]
+        client_traj = [item for sublist in client_traj for item in sublist]
+        #fix slashes so they match and can be split upon
+        hsp_traj=fix_backslash(listo=hsp_trajs)
+        client_traj=fix_backslash(listo=client_traj)
+        #read, clean, match trajectories, give new names
+        named_trajectories=read_trajectories(hsp_traj, client_traj)
+        #save this version as a checkpoint  
+        named_trajectories.to_csv(f'{output_folder}renamed_trajectories_all.csv')
+        #make a list of the columns that ARENT molecule_name and drop all of them!!! because this is the ONLY col you can have in py4bleaching
+        test=['identifier','path_info','timepoint (min)','new_name']
+        testo=named_trajectories.drop(columns=[col for col in named_trajectories if col in test])
+
+        #now we want to FILTER and resave the trajectories as separate dataframes (remembering they're different fluorophores and as such neeeded to be analysed for photobleaching spearately.)
+        #define outputs that nests them correctly for feeding into py4bleaching
+        hsp_output = f'{output_folder}/shsp/{tp_folder}/coloc/'
+        client_output = f'{output_folder}/client/{tp_folder}/coloc/'
+        #create these directories
+        make_directory(o=hsp_output)
+        make_directory(o=client_output)
+
+        #filter for hsp or client only based on the molecule name, then reshape the data so it fits with the way we read it in in py4bleaching
+        hsp_only = testo[~testo['molecule_number'].str.contains('client')]
+        hsp_only=reshape_data(df=hsp_only)
+        client_only = testo[~testo['molecule_number'].str.contains('hsp')]
+        client_only=reshape_data(df=client_only)
+        #save them to the outputs you just made
+        hsp_only.to_csv(f'{hsp_output}hsp_coloc_traj.csv')
+        client_only.to_csv(f'{client_output}client_coloc_traj.csv')
 
