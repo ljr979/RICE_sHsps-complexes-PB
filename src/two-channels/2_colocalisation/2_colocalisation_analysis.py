@@ -150,8 +150,8 @@ if __name__ == "__main__":
     input_folder = 'data/'
     output_folder = 'python_results/colocalisation/'
 
-    # if not os.path.exists(output_folder):
-    #     os.makedirs(output_folder)
+    if not os.path.exists(output_folder):
+         os.makedirs(output_folder)
 
     #this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if required
     #find the df containing cleaned colocalisation data
@@ -164,8 +164,8 @@ if __name__ == "__main__":
 
 
     #split big df into hsp and client again
-    shsp = molecules[molecules["protein"] == "hsp"]
-    client = molecules[molecules['protein'] == 'client']
+    shsp = molecules[molecules["protein"]=="hsp"]
+    client = molecules[molecules['protein']=='client']
     zero = []
     fifteen = []
     thirty = []
