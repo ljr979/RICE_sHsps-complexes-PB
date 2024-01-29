@@ -26,9 +26,9 @@ def kruskal_wallis_start_finish(treatment, df):
     #so df should be the protein.csv file saved in the repo
     #treatment should be a string, plus or minus client or shsp
     print(f'{treatment}:')
-    treatment=df[df['incubated'] == treatment]
-    start = np.array(treatment[treatment['start_end'] == 'start']['last_step_mol_count'])
-    end = np.array(treatment[treatment['start_end'] == 'end']['last_step_mol_count'])
+    treatment = df[df['incubated']==treatment]
+    start = np.array(treatment[treatment['start_end']=='start']['last_step_mol_count'])
+    end = np.array(treatment[treatment['start_end']=='end']['last_step_mol_count'])
     results = stats.kruskal(start, end)
     
     print(results)
@@ -37,7 +37,7 @@ def kruskal_wallis_start_finish(treatment, df):
 
 if __name__ == "__main__":
     # read in here the dfs 'Clic.csv' and 'fluc.csv' and hsp27.csv (these have the number of molecules for each of these proteins)
-    input_folder='data/Figures/Figure_3/B-violinplots/'
+    input_folder = 'data/Figures/Figure_3/B-violinplots/'
     clients = ['CLIC', 'FLUC', 'RHOD']
     proteins = ['CLIC', 'FLUC','RHOD', 'hsp27']
 
@@ -50,32 +50,32 @@ if __name__ == "__main__":
 
             #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
             print(x)
-            start_hsp, end_hsp=kruskal_wallis_start_finish(treatment='+sHsp', df=df)
+            start_hsp, end_hsp = kruskal_wallis_start_finish(treatment='+sHsp', df=df)
 
             #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
-            start_nohsp, end_nohsp=kruskal_wallis_start_finish(treatment='-sHsp', df=df)
+            start_nohsp, end_nohsp = kruskal_wallis_start_finish(treatment='-sHsp', df=df)
 
             #now we compare between the end of the incubation for the two treatments (did the size of the client vary after 7h when we had sHsp present or not?)
-            result_end_each=stats.kruskal(end_hsp, end_nohsp)
+            result_end_each = stats.kruskal(end_hsp, end_nohsp)
             print('comparing END timepoint mol (client)size distribution between nosHsp present, and a shsp present:')
             print(result_end_each)
         if x not in clients:
             #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
             print(x)
-            start_noclient, end_noclient=kruskal_wallis_start_finish(
+            start_noclient, end_noclient = kruskal_wallis_start_finish(
                 treatment='-client', df=df)
 
-            pairs=df[df['incubated']=='+client']['Pair'].unique().tolist()
+            pairs = df[df['incubated']=='+client']['Pair'].unique().tolist()
 
             for client in pairs:
                 client
                 print(client)
                 df1 = df[df['Pair']==client]
                 #now we are going to store the variables that are the arrays of the start and end for this treatment, so that we can compare further later on
-                start_client, end_client=kruskal_wallis_start_finish(
+                start_client, end_client = kruskal_wallis_start_finish(
                     treatment='+client', df=df1)
                 #now we compare between the end of the incubation for the two treatments (did the size of the client vary after 7h when we had sHsp present or not?)
-                result_end_each=stats.kruskal(end_noclient, end_client)
+                result_end_each = stats.kruskal(end_noclient, end_client)
                 print(
                     f'comparing END timepoint mol (sHsp) size distribution between no {client} and a {client} present:')
                 print(result_end_each)

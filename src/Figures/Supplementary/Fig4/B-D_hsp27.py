@@ -44,19 +44,19 @@ def plotting(df1, pair, protein, sHsp, palette_dict):
         plt.show()
 
 if __name__ == "__main__":
-    input_folder= 'data/Figures/Figure_4/'
+    input_folder = 'data/Figures/Figure_4/'
 
     #define the chaperone which is common to all 
-    chap='hsp27'
+    chap = 'hsp27'
     #this is just a dictionary to hold the colours you want to plot. the ones with 'chap' after them are just slightly different colour variations to the matching client, to differentiate between them. The client names are matching the way the client will be identified in the dataset
-    palette_store={f'CLIC_{chap}':['#ff4800', "#ff7900"], f'FLUC_{chap}':['#4b9cd3', '#1b264f'], f'Rhod_{chap}':['#ebebd3', '#437641'],'FLUC':'Purples', 'CLIC':'Reds', 'Rhod':'Greens'}
+    palette_store = {f'CLIC_{chap}':['#ff4800', "#ff7900"], f'FLUC_{chap}':['#4b9cd3', '#1b264f'], f'Rhod_{chap}':['#ebebd3', '#437641'],'FLUC':'Purples', 'CLIC':'Reds', 'Rhod':'Greens'}
     #read in this data which is alreaddy saved
-    df=pd.read_csv(f'{input_folder}{chap}/{chap}_coloc_noncoloc_alltps.csv')
+    df = pd.read_csv(f'{input_folder}{chap}/{chap}_coloc_noncoloc_alltps.csv')
     #define the pairs to loop through
-    pairs=[f'FLUC_{chap}',f'CLIC_{chap}', f'Rhod_{chap}']
+    pairs = [f'FLUC_{chap}',f'CLIC_{chap}', f'Rhod_{chap}']
     #loop over each pair, and plot as a violinplot in the colour described
     for pair in pairs:
-        client=pair.split('_')[0]
-        df1=df[df['Pair']==pair]
-        palette_dict={f'{chap}':palette_store[pair], f'{client}':palette_store[client]}
+        client = pair.split('_')[0]
+        df1 = df[df['Pair']==pair]
+        palette_dict = {f'{chap}':palette_store[pair], f'{client}':palette_store[client]}
         plotting(df1, pair, protein=client, sHsp=chap, palette_dict=palette_dict)

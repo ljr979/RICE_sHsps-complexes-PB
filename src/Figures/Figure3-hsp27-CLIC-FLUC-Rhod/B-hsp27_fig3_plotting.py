@@ -50,7 +50,7 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     FLUC=pd.concat(FLUC)
     return CLIC, FLUC, RHOD
 
-def plotting(df, protein, palette, output_folder):
+def plotting(df, protein, palette, output_folder): 
     """plot as violinplots the log of subunit count
 
     Args:
@@ -81,26 +81,26 @@ def plotting(df, protein, palette, output_folder):
     plt.show()
 
 if __name__ == "__main__":
-    input_folder='data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/start_finish_filtered/'
-    output_folder='data/Figures/Figure_3/B-violinplots/'
+    input_folder = 'data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/start_finish_filtered/'
+    output_folder = 'data/Figures/Figure_3/B-violinplots/'
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    files=[item for item in os.listdir(input_folder)]
-    grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
+    files = [item for item in os.listdir(input_folder)]
+    grouping_dict = {'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
     #filter and organise, and then save these
-    CLIC, FLUC , RHOD=filter_for_client_hsp27(input_folder, files, grouping_dict)
+    CLIC, FLUC , RHOD = filter_for_client_hsp27(input_folder, files, grouping_dict)
     CLIC.to_csv(f'{output_folder}CLIC.csv')
     FLUC.to_csv(f'{output_folder}FLUC.csv')
     RHOD.to_csv(f'{output_folder}RHOD.csv')
     #these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
-    c2=CLIC[CLIC['start_end']=='end']
-    f2=FLUC[FLUC['start_end']=='end']
-    r2=RHOD[RHOD['start_end']=='end']
+    c2 = CLIC[CLIC['start_end']=='end']
+    f2 = FLUC[FLUC['start_end']=='end']
+    r2 = RHOD[RHOD['start_end']=='end']
     combo_v2 = pd.concat([c2, f2, r2])
     #convert to the log of the number of subunits for plotting!
-    combo_v2['log_count']=np.log10(combo_v2['last_step_mol_count'])
+    combo_v2['log_count'] = np.log10(combo_v2['last_step_mol_count'])
     #save this data that is going to be plotted
     combo_v2.to_csv(f'{output_folder}violinplots-fig3.csv')
     #plot and save

@@ -30,7 +30,7 @@ def two_way_ANOVA(d, pval, variable='last_step_mol_count', xvar1='Timepoint', xv
     Returns:
         df: dataframe with all of the p values for each tp and coloc state.
     """
-    two_sigs=[]
+    two_sigs = []
     for protein, df in d.groupby('Protein'):
         protein 
         df
@@ -43,24 +43,24 @@ def two_way_ANOVA(d, pval, variable='last_step_mol_count', xvar1='Timepoint', xv
         res = stat()
         # for main effect 
         res.tukey_hsd(df=df, res_var=variable, xfac_var=xvar1, anova_model=f'{variable}~C({xvar1})+C({xvar2})+C({xvar1}):C({xvar2})')
-        x=res.tukey_summary
-        sigx=x[x['p-value']<=pval]
+        x = res.tukey_summary
+        sigx = x[x['p-value']<=pval]
         res.tukey_hsd(df=df, res_var=variable, xfac_var=[f'{xvar1}',f'{xvar2}'], anova_model=f'{variable}~C({xvar1})+C({xvar2})+C({xvar1}):C({xvar2})')
-        y=res.tukey_summary
-        ysig=y[y['p-value']<=pval]
-        ysig['Protein']=protein
+        y = res.tukey_summary
+        ysig = y[y['p-value']<=pval]
+        ysig['Protein'] = protein
         two_sigs.append(ysig)
 
-    two_sigs=pd.concat(two_sigs)
+    two_sigs = pd.concat(two_sigs)
     return two_sigs
 
 if __name__ == "__main__":
 
-    output_folder='data/Figures/Figure_3/aBc/'
-    data= pd.read_csv('data/Figures/Figure_3/aBc/aBc_coloc_noncoloc_alltps.csv')
-    proteins=['FLUC', 'CLIC']
+    output_folder = 'data/Figures/Figure_3/aBc/'
+    data = pd.read_csv('data/Figures/Figure_3/aBc/aBc_coloc_noncoloc_alltps.csv')
+    proteins = ['FLUC', 'CLIC']
 
     for b in proteins:     
-        d=data[data['Pair']==f'{b}_aB-c']
-        two_sigs_b=two_way_ANOVA(d=d, pval=0.05, variable='last_step_mol_count', xvar1='Timepoint', xvar2='Colocalisation')
+        d = data[data['Pair']==f'{b}_aB-c']
+        two_sigs_b = two_way_ANOVA(d=d, pval=0.05, variable='last_step_mol_count', xvar1='Timepoint', xvar2='Colocalisation')
         two_sigs_b.to_csv(f'{output_folder}twoway_ANOVA_{b}.csv')

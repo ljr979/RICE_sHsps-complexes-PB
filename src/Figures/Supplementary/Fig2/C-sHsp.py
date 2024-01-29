@@ -84,30 +84,30 @@ def plotting2(df,chap):
 
 if __name__ == "__main__":
 
-    input_folder= 'data/Figures/violinplots-supp-figs2-3-4/start_finish_filtered/'
-    output_folder='data/Figures/violinplots-supp-figs2-3-4/'
+    input_folder = 'data/Figures/violinplots-supp-figs2-3-4/start_finish_filtered/'
+    output_folder = 'data/Figures/violinplots-supp-figs2-3-4/'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    files=[item for item in os.listdir(input_folder) ]
-    grouping_dict={'FLUC_aBc': '+client', 'CLIC_aBc':'+client', 'None':'-client'}
+    files = [item for item in os.listdir(input_folder) ]
+    grouping_dict = {'FLUC_aBc': '+client', 'CLIC_aBc':'+client', 'None':'-client'}
     aBc = filter_for_sHsp_aBc(input_folder, files, grouping_dict)
     #aBc.to_csv(f'{output_folder}aBc.csv')
 
-    pairs=['CLIC_aBc', 'FLUC_aBc']
+    pairs = ['CLIC_aBc', 'FLUC_aBc']
 
-    new=[]
+    new = []
     for pair in pairs:
         pair
-        p=['None', pair]
-        client=pair.split('_')[0]
-        new_df=aBc[aBc['Pair'].isin(p)]
-        col_dict={'-client':'-client', '+client':f'+ {client}'}
-        new_df['+']=new_df['incubated'].map(col_dict)
-        new_df['log_count']=np.log10(new_df['last_step_mol_count'])
+        p = ['None', pair]
+        client = pair.split('_')[0]
+        new_df = aBc[aBc['Pair'].isin(p)]
+        col_dict = {'-client':'-client', '+client':f'+ {client}'}
+        new_df['+'] = new_df['incubated'].map(col_dict)
+        new_df['log_count'] = np.log10(new_df['last_step_mol_count'])
         new.append(new_df)
-    all_aBc=pd.concat(new)
+    all_aBc = pd.concat(new)
 
     all_aBc = all_aBc.apply(lambda x: x.apply(lambda y: np.nan if y < 0 else y) if np.issubdtype(x.dtype, np.number) else x)
-    all_aBc=all_aBc.dropna(axis=0)
+    all_aBc = all_aBc.dropna(axis=0)
     plotting2(df=all_aBc, chap='aBc')

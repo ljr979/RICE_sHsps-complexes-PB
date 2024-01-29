@@ -22,18 +22,18 @@ def filter_for_sHsp_hsp27(input_folder, files, grouping_dict):
     hsp27 = []
     
     for f in files: 
-        startfin=pd.read_csv(f'{input_folder}{f}')
+        startfin=  pd.read_csv(f'{input_folder}{f}')
         startfin.drop([col for col in startfin.columns.tolist() if 'Unnamed: 0' in col],axis=1, inplace=True)
 
-        startfin=startfin.rename(columns={'pair':'Pair'})
-        keeps=[item for item in startfin['Pair'] if 'hsp27' in item]
-        keeps= list(set(keeps))
+        startfin = startfin.rename(columns={'pair':'Pair'})
+        keeps = [item for item in startfin['Pair'] if 'hsp27' in item]
+        keeps = list(set(keeps))
         keeps = keeps + ['None']
-        startfin_abs=startfin[startfin['Pair'].isin(keeps)]
+        startfin_abs = startfin[startfin['Pair'].isin(keeps)]
 
 
         #split up all the clients that have been incubated with hsp27
-        df_hsp27=startfin_abs[startfin_abs['Protein']=='hsp27']
+        df_hsp27 = startfin_abs[startfin_abs['Protein']=='hsp27']
         
 
 
@@ -41,10 +41,10 @@ def filter_for_sHsp_hsp27(input_folder, files, grouping_dict):
         
         
 
-    hsp27=pd.concat(hsp27)
+    hsp27 = pd.concat(hsp27)
     #map on groups so that we keep coloc and non coloc together, and just label them + sHsp, and control is now -sHsp
   
-    hsp27['incubated']=hsp27['Pair'].map(grouping_dict)
+    hsp27['incubated'] = hsp27['Pair'].map(grouping_dict)
     #FLUC=pd.concat(FLUC)
     return hsp27
 
@@ -55,7 +55,7 @@ def plotting2(df,chap):
         df (df): dataframe with the mol sizes
         chap (str): the name of the chaperone, for labelling
     """
-    dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', '+','last_step_mol_count'], value_vars=['log_count'])
+    dfmelt = pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', '+','last_step_mol_count'], value_vars=['log_count'])
 
     fig, ax = plt.subplots()
     ax = sns.violinplot(x="+",
@@ -72,36 +72,35 @@ def plotting2(df,chap):
     ax.set_ylim(-0.2,max(dfmelt['value']))
     plt.legend(title=f'Incubation time (h)', loc='upper left')
     plt.title(f'{chap} + or - client')
-
     #plt.savefig(f'{output_folder}hsp27_stoichiometries_plus_minus_client.svg')
     plt.show()
 
 if __name__ == "__main__":
 
-    input_folder= 'data/Figures/violinplots-supp-figs2-3-4/start_finish_filtered/'
-    output_folder='data/Figures/violinplots-supp-figs2-3-4/'
+    input_folder = 'data/Figures/violinplots-supp-figs2-3-4/start_finish_filtered/'
+    output_folder = 'data/Figures/violinplots-supp-figs2-3-4/'
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
 
-    files=[item for item in os.listdir(input_folder) ]
-    grouping_dict={'FLUC_hsp27': '+client', 'CLIC_hsp27':'+client', 'Rhod_hsp27':'+client', 'None':'-client'}
+    files = [item for item in os.listdir(input_folder) ]
+    grouping_dict = {'FLUC_hsp27': '+client', 'CLIC_hsp27':'+client', 'Rhod_hsp27':'+client', 'None':'-client'}
     hsp27 = filter_for_sHsp_hsp27(input_folder, files, grouping_dict)
-    pairs=['CLIC_hsp27', 'FLUC_hsp27', 'Rhod_hsp27']
+    pairs = ['CLIC_hsp27', 'FLUC_hsp27', 'Rhod_hsp27']
 
-    new=[]
+    new = []
     for pair in pairs:
         pair
-        p=['None', pair]
-        client=pair.split('_')[0]
-        new_df=hsp27[hsp27['Pair'].isin(p)]
-        col_dict={'-client':'-client', '+client':f'+ {client}'}
-        new_df['+']=new_df['incubated'].map(col_dict)
-        new_df['log_count']=np.log10(new_df['last_step_mol_count'])
+        p = ['None', pair]
+        client = pair.split('_')[0]
+        new_df = hsp27[hsp27['Pair'].isin(p)]
+        col_dict = {'-client':'-client', '+client':f'+ {client}'}
+        new_df['+'] = new_df['incubated'].map(col_dict)
+        new_df['log_count'] = np.log10(new_df['last_step_mol_count'])
         new.append(new_df)
-    all_hsp27=pd.concat(new)
+    all_hsp27 = pd.concat(new)
 
     all_hsp27 = all_hsp27.apply(lambda x: x.apply(lambda y: np.nan if y < 0 else y) if np.issubdtype(x.dtype, np.number) else x)
-    all_hsp27=all_hsp27.dropna(axis=0)
+    all_hsp27 = all_hsp27.dropna(axis=0)
 
     plotting2(df=all_hsp27, chap='hsp27')

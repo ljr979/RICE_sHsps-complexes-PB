@@ -82,14 +82,14 @@ def plotting(df, protein, palette, output_folder):
     plt.show()
 
 if __name__ == "__main__":
-    input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'
-    output_folder='data/Figures/Figure_2/C-violinplots/'
+    input_folder = 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'
+    output_folder ='data/Figures/Figure_2/C-violinplots/'
 
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    files=[item for item in os.listdir(input_folder)]
-    grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
+    files = [item for item in os.listdir(input_folder)]
+    grouping_dict = {'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
     #filter for clients of interest
     CLIC, FLUC = filter_for_client_aBc(input_folder, files, grouping_dict)
     CLIC.to_csv(f'{output_folder}CLIC.csv')
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     #these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
     c2 = CLIC[CLIC['start_end'] == 'end']
     f2 = FLUC[FLUC['start_end'] == 'end']
-    combo_v2=pd.concat([c2, f2])
+    combo_v2 = pd.concat([c2, f2])
 
     #convert count to log10 count for plotting
     combo_v2['log_count'] = np.log10(combo_v2['last_step_mol_count'])

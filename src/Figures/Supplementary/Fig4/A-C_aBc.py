@@ -43,16 +43,16 @@ def plotting(df1, pair, protein, sHsp, palette_dict):
         plt.show()
 
 if __name__ == "__main__":
-    input_folder= 'data/Figures/Figure_4/'
+    input_folder = 'data/Figures/Figure_4/'
 
-    palette_store={'CLIC_aB-c':['#ff4800', "#ff7900"], 'FLUC_aB-c':['#4b9cd3', '#1b264f'], 'FLUC':'Purples', 'CLIC':'Reds'}
-    chap='aB-c'
-    df=pd.read_csv(f'{input_folder}{chap}/{chap}_coloc_noncoloc_alltps.csv')
-    pairs=[f'FLUC_{chap}',f'CLIC_{chap}']
+    palette_store = {'CLIC_aB-c':['#ff4800', "#ff7900"], 'FLUC_aB-c':['#4b9cd3', '#1b264f'], 'FLUC':'Purples', 'CLIC':'Reds'}
+    chap ='aB-c'
+    df = pd.read_csv(f'{input_folder}{chap}/{chap}_coloc_noncoloc_alltps.csv')
+    pairs = [f'FLUC_{chap}',f'CLIC_{chap}']
 
     for pair in pairs:
-        client=pair.split('_')[0]
-        df1=df[df['Pair']==pair]
-        palette_dict={f'{chap}':palette_store[pair], f'{client}':palette_store[client]}
+        client = pair.split('_')[0]
+        df1 = df[df['Pair']==pair]
+        palette_dict = {f'{chap}':palette_store[pair], f'{client}':palette_store[client]}
         plotting(df1, pair, protein=client, sHsp='aB-c', palette_dict=palette_dict)
 

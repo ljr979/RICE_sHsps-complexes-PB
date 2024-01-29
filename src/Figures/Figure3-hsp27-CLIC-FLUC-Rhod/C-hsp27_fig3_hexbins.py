@@ -1,4 +1,4 @@
-"""plotting figure 3 hexplots (at each timepoint, the number of subunits of each protein, in each complex)(For Hsp27)
+"""plotting figure 3 hexplots (at each timepoint, the number of subunits of each protein, in each complex)(For Hsp27 )
 
 """
 import os, re
@@ -161,7 +161,7 @@ if __name__ == "__main__":
             os.makedirs(output_folder)
 
 
-    counts_collated=read_counts(input_folder=input_folder)
+    counts_collated = read_counts(input_folder=input_folder)
     functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='Rhodanese and hsp27', cmap='Greens', ylimo=25, xlimo=30, gridsize=(22,12), nrows=7, ncols=1, n_colors=50, vmin=0, vmax=30, cmap_axes=6, counts_collated=counts_collated)
 
 
@@ -171,20 +171,20 @@ if __name__ == "__main__":
     if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
-    counts_collated=read_counts(input_folder=input_folder)
+    counts_collated = read_counts(input_folder=input_folder)
     #next two lines ensures that all the timepoints match the other complexes because some replicates for this pair were labelled differently,so we are matching them to the others
-    dic={0.0:0.0,15.0:20.0,30.0:40.0,60.0:60.0,180.0:240.0, 240.0:240.0, 420.0:420.0}
+    dic = {0.0:0.0,15.0:20.0,30.0:40.0,60.0:60.0,180.0:240.0, 240.0:240.0, 420.0:420.0}
     counts_collated['timepoint (min)']=counts_collated['timepoint (min)'].map(dic)
 
     functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='FLUC_hsp27', cmap='Purples', ylimo=40, xlimo=30, gridsize=(22,12), nrows=7, ncols=1, n_colors=50, vmin=0, vmax=30, cmap_axes=6, counts_collated=counts_collated)
 
 
-    input_folder='data/Figures/Figure_3/C-matched_hexbins/hsp27/CLIC_hsp27/'
-    output_folder='data/Figures/Figure_3/C-matched_hexbins/hsp27/CLIC_hsp27/'
+    input_folder = 'data/Figures/Figure_3/C-matched_hexbins/hsp27/CLIC_hsp27/'
+    output_folder = 'data/Figures/Figure_3/C-matched_hexbins/hsp27/CLIC_hsp27/'
 
     if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
 
-    counts_collated=read_counts(input_folder=input_folder)
+    counts_collated = read_counts(input_folder=input_folder)
     functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='CLIC and hsp27', cmap='Reds', ylimo=10, xlimo=16, gridsize=(60,40), nrows=7, ncols=1, n_colors=50, vmin=0, vmax=8, cmap_axes=6, counts_collated=counts_collated)

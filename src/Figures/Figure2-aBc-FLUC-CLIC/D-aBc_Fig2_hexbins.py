@@ -145,16 +145,17 @@ def functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_fol
         cmap_axes (int): _description_
         counts_collated (df): all the collated counts
     """
-    counts_collated, dicto, complexes_count=calc_ratios(counts_collated, pair)
+    counts_collated, dicto, complexes_count = calc_ratios(counts_collated, pair)
     #exclude last timepoint because FLUC does not have this same timepoint
-    counts_collated=counts_collated[counts_collated['timepoint (min)']!=420.0]
-    extent=[0, np.max(counts_collated['client']), 0, np.max(counts_collated['client'])]
-    cm=create_custom_colourmap(cmap, n_colors)
+    counts_collated = counts_collated[counts_collated['timepoint (min)']!=420.0]
+    extent = [0, np.max(counts_collated['client']), 0, np.max(counts_collated['client'])]
+    cm = create_custom_colourmap(cmap, n_colors)
     fig, axes = plt.subplots(nrows, ncols, figsize=(2,10), gridspec_kw={'height_ratios': [7, 7, 7, 7, 7, 0.5] })
-    fig, axes=plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, gridsize, extent, xlimo, ylimo, cm, cmap_axes)
+    fig, axes = plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, gridsize, extent, xlimo, ylimo, cm, cmap_axes)
     #fig.savefig(f'{output_folder}{pair}.svg')
     #fig.savefig(f'{output_folder}{pair}.png')
     plt.show()
+
 
 if __name__ == "__main__":
     
@@ -165,7 +166,7 @@ if __name__ == "__main__":
         'size'   : 12
     }
     plt.rc('font', **font)
-    plt.rcParams['svg.fonttype']= 'none'
+    plt.rcParams['svg.fonttype'] = 'none'
 
     input_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/CLIC_aB-c/'
     output_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/'
@@ -173,7 +174,7 @@ if __name__ == "__main__":
     if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
-    counts_collated=read_counts(input_folder=input_folder)
+    counts_collated = read_counts(input_folder=input_folder)
     #specify the function inputs depending on the pair of proteins (colour, x and y limits, etc.)
     functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='CLIC and aB-c', cmap='Reds', ylimo=20, xlimo=20, gridsize=(30,20), nrows=6, ncols=1, n_colors=50, vmin=0, vmax=5, cmap_axes=5, counts_collated=counts_collated)
 
@@ -181,6 +182,6 @@ if __name__ == "__main__":
     input_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/FLUC_aB-c/'
     output_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/'
 
-    counts_collated=read_counts(input_folder=input_folder)
+    counts_collated = read_counts(input_folder=input_folder)
     functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='FLUC and aB-c', cmap='Purples', ylimo=40, xlimo=30, gridsize=(22,12), nrows=6, ncols=1, n_colors=50, vmin=0, vmax=10, cmap_axes=5, counts_collated=counts_collated)
 
