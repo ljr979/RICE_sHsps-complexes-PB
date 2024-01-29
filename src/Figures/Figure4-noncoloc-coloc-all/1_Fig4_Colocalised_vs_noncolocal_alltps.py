@@ -5,24 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
-#this script just organises the data for plotting in the next plots. gathers the data which was cleaned and organised in preparation for figures2 and 3, and then combines non colocalised and colocalised files but with separate names so we can split them, and makes sure ALL timepoints are here (in figs 2 and 3, we only had the start and end of the experiment)
-
-input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/'
-output_folder='python_results/Figure_4/'
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-
-stoich_files_noncoloc =[[f'{root}/{filename}' for filename in files if 'wrangled.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
-stoich_files_noncoloc=[item for sublist in stoich_files_noncoloc for item in sublist]
-stoich_files_coloc =[[f'{root}/{filename}' for filename in files if 'colocal_all_melted.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
-stoich_files_coloc=[item for sublist in stoich_files_coloc for item in sublist ]
-
-#this line adds the two lists together so that all the filenames that I outputted from 'fig3_fig4_ colocalisedvscontrol start finish' script are in one big list. THese files are all in the same format, so I should be able to read them in and then fix and filter them so that they can be plotted the way I want them! 
-collated_stoich_files=stoich_files_noncoloc+stoich_files_coloc
-
-
 
 def read_counts_all(collated_stoich_files):
     """reads in the counts files, concatinates and matches the columns so they can be combined. fixes timepoints that were labelled unusually.
@@ -64,11 +46,26 @@ def read_counts_all(collated_stoich_files):
     alls['Pair']=alls['Pair'].map(pairs_dict)
     return alls
 
-all_proteins_tps=read_counts_all(collated_stoich_files)
+#this script just organises the data for plotting in the next plots. gathers the data which was cleaned and organised in preparation for figures2 and 3, and then combines non colocalised and colocalised files but with separate names so we can split them, and makes sure ALL timepoints are here (in figs 2 and 3, we only had the start and end of the experiment)
+if __name__ == "__main__":
+    input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/'
+    output_folder='python_results/Figure_4/'
 
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-#save them fore filtering and plotting later
-all_proteins_tps.to_csv(f'{output_folder}allproteins_alltimepoints_coloc_noncoloc.csv')
+    stoich_files_noncoloc =[[f'{root}/{filename}' for filename in files if 'wrangled.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
+    stoich_files_noncoloc=[item for sublist in stoich_files_noncoloc for item in sublist]
+    stoich_files_coloc =[[f'{root}/{filename}' for filename in files if 'colocal_all_melted.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
+    stoich_files_coloc=[item for sublist in stoich_files_coloc for item in sublist ]
+
+    #this line adds the two lists together so that all the filenames that I outputted from 'fig3_fig4_ colocalisedvscontrol start finish' script are in one big list. THese files are all in the same format, so I should be able to read them in and then fix and filter them so that they can be plotted the way I want them! 
+    collated_stoich_files=stoich_files_noncoloc+stoich_files_coloc
+
+    all_proteins_tps=read_counts_all(collated_stoich_files)
+
+    #save them fore filtering and plotting later
+    all_proteins_tps.to_csv(f'{output_folder}allproteins_alltimepoints_coloc_noncoloc.csv')
 
 
 

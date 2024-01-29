@@ -8,14 +8,6 @@ import seaborn as sns
 from loguru import logger
 #this script needs to filter all the data for coloc vs non-coloc, in the presence of aB-c, and in the case of CLIC, FLUC AND aB-c, then save the data as with figs 3 and 4 for plotting in violinplots.
 
-input_folder= 'data/Figures/Figure_4/'
-output_folder='data/Figures/Figure_4/aBc/'
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-files=[item for item in os.listdir(input_folder) if 'coloc_noncoloc.csv' in item]
-
 def filter_for_sHsp_aBc(input_folder, files):
     """read in data and filter for aBc data only
 
@@ -221,25 +213,33 @@ def plot_lines_clients(alls_clients, axes_dict, title, output_folder, CLIC_cols,
     plt.savefig(f'{output_folder}{group}_lineplots_subplots_aB-c_clients.png')
 
     plt.show()
+if __name__ == "__main__":
+        
+    input_folder= 'data/Figures/Figure_4/'
+    output_folder='data/Figures/Figure_4/aBc/'
 
-#this filters the big dataframe for only those that have been incubated with aB-c
-aBc_only = filter_for_sHsp_aBc(input_folder, files)
-#save the filtered data which will be plotted
-aBc_only.to_csv(f'{output_folder}aBc_coloc_noncoloc_alltps.csv')
-#define the clients present
-clients=['FLUC','CLIC']
-#determine the median and error for each timepoint, colocalised and non-colocalised, for each protein in these experiments
-alls_clients=get_medians_for_plotting_clients(clients, aBc_only)
-#made a dictionary to determine which pair you want in which position on your plot- change accordingly! position 0 is top graph, 1 is bottom graph, 2 below that etc. and just change keys to be whatever your pair is defined as
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-#where you want to save the plot!
-output_folder='python_results/Fig6_noncolocal_vs_colocal/filtering/abc/'
-#run the plotting function :)
-plot_lines_clients(alls_clients, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median coloc vs non-coloc client (incubated w aB-c) size', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
+    files=[item for item in os.listdir(input_folder) if 'coloc_noncoloc.csv' in item]
+    #this filters the big dataframe for only those that have been incubated with aB-c
+    aBc_only = filter_for_sHsp_aBc(input_folder, files)
+    #save the filtered data which will be plotted
+    aBc_only.to_csv(f'{output_folder}aBc_coloc_noncoloc_alltps.csv')
+    #define the clients present
+    clients=['FLUC','CLIC']
+    #determine the median and error for each timepoint, colocalised and non-colocalised, for each protein in these experiments
+    alls_clients=get_medians_for_plotting_clients(clients, aBc_only)
+    #made a dictionary to determine which pair you want in which position on your plot- change accordingly! position 0 is top graph, 1 is bottom graph, 2 below that etc. and just change keys to be whatever your pair is defined as
 
-#define the sHsp as it is in the dataframe so you can select for it!
-#now we do the same for aB-c 
-alls=get_medians_for_plotting(aBc_only, sHsp='aB-c')
-#plot!
-plot_lines_sHsp(alls, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median aB-c molecule size, coloc vs. non-coloc', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
+    #where you want to save the plot!
+    output_folder='python_results/Fig6_noncolocal_vs_colocal/filtering/abc/'
+    #run the plotting function :)
+    plot_lines_clients(alls_clients, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median coloc vs non-coloc client (incubated w aB-c) size', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
+
+    #define the sHsp as it is in the dataframe so you can select for it!
+    #now we do the same for aB-c 
+    alls=get_medians_for_plotting(aBc_only, sHsp='aB-c')
+    #plot!
+    plot_lines_sHsp(alls, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median aB-c molecule size, coloc vs. non-coloc', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
 
