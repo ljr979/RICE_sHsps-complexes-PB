@@ -77,8 +77,6 @@ if __name__ == "__main__":
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    chap='aBc'
-
     files=[item for item in os.listdir(input_folder) ]
     grouping_dict={'FLUC_aBc': '+client', 'CLIC_aBc':'+client', 'None':'-client'}
     aBc = filter_for_sHsp_aBc(input_folder, files, grouping_dict)
@@ -100,7 +98,4 @@ if __name__ == "__main__":
 
     all_aBc = all_aBc.apply(lambda x: x.apply(lambda y: np.nan if y < 0 else y) if np.issubdtype(x.dtype, np.number) else x)
     all_aBc=all_aBc.dropna(axis=0)
-
-    df=all_aBc
-
-    plotting2(df, chap)
+    plotting2(df=all_aBc, chap='aBc')

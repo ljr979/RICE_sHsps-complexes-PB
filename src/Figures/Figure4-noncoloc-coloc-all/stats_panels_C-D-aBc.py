@@ -57,11 +57,10 @@ def two_way_ANOVA(d, pval, variable='last_step_mol_count', xvar1='Timepoint', xv
 if __name__ == "__main__":
 
     output_folder='data/Figures/Figure_3/aBc/'
-    pval= 0.05
     data= pd.read_csv('data/Figures/Figure_3/aBc/aBc_coloc_noncoloc_alltps.csv')
     proteins=['FLUC', 'CLIC']
 
     for b in proteins:     
         d=data[data['Pair']==f'{b}_aB-c']
-        two_sigs_b=two_way_ANOVA(d=d, pval=pval, variable='last_step_mol_count', xvar1='Timepoint', xvar2='Colocalisation')
+        two_sigs_b=two_way_ANOVA(d=d, pval=0.05, variable='last_step_mol_count', xvar1='Timepoint', xvar2='Colocalisation')
         two_sigs_b.to_csv(f'{output_folder}twoway_ANOVA_{b}.csv')

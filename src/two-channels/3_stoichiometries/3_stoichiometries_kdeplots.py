@@ -102,16 +102,4 @@ molecule_pivot.to_csv(f'{output_folder}molecule_counts_plots_collated.csv')
 #-------------------
 #PLOTTING
 #E.G fluc and hsp27, but wahtever you want this to be saved as
-pair = 'FLUC and hsp27'
-
-#whatever you want also.
-cmap = 'Purples'
-
-#can change these to zoom in etc.
-ylimo = 50
-xlimo = 60
-ncols = 6
-counts_collated = molecule_pivot
-cmap = plt.get_cmap(cmap)
-new_cmap = truncate_colormap(cmap)
-plot_kde(counts_collated, output_folder, pair, xlimo, ylimo, ncols, cmap)
+plot_kde(counts_collated=molecule_pivot, output_folder=output_folder, pair='FLUC and hsp27', xlimo=60, ylimo=50, ncols=6, cmap=truncate_colormap('Purples'))

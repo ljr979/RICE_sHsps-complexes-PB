@@ -225,16 +225,12 @@ def plot_lines_clients(alls_clients, axes_dict, title, output_folder, CLIC_cols,
     plt.show()
 
 
-
 #this filters the big dataframe for only those that have been incubated with hsp27
 hsp27_only = filter_for_sHsp_hsp27(input_folder, files)
-
 hsp27_only.to_csv(f'{output_folder}hsp27_coloc_noncoloc_alltps.csv')
-
 #define the clients present
 clients=['FLUC','CLIC', 'Rhod']
 #determine the median and error for each timepoint, colocalised and non-colocalised, for each protein in these experiments
-
 alls_clients=get_medians_for_plotting_clients(clients, hsp27_only)
 #made a dictionary to determine which pair you want in which position on your plot- change accordingly! position 0 is top graph, 1 is bottom graph, 2 below that etc. and just change keys to be whatever your pair is defined as
 axes_dict={'CLIC_hsp27':0,'FLUC_hsp27':1, 'Rhod_hsp27':2}
@@ -245,25 +241,15 @@ CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'}
 
 Rhod_cols={'Coloc': '#60992d','Non-coloc':'#8cae68'}
 
-#title of your graph
-title='Median coloc vs non-coloc client (incubated w hsp27) size'
 #where you want to save the plot!
 output_folder='python_results/Fig6_noncolocal_vs_colocal/filtering/hsp27/'
 #run the plotting function :)
-plot_lines_clients(alls_clients, axes_dict, title, output_folder,CLIC_cols,FLUC_cols, Rhod_cols)
-
-
+plot_lines_clients(alls_clients, axes_dict, title='Median coloc vs non-coloc client (incubated w hsp27) size', output_folder=output_folder,CLIC_cols=CLIC_cols,FLUC_cols=FLUC_cols, Rhod_cols=Rhod_cols)
 
 #define the sHsp as it is in the dataframe so you can select for it!
-sHsp=['hsp27']
 #now we do the same for hsp27 
-alls_hsp27=get_medians_for_plotting(hsp27_only, sHsp)
-#match this to the clients plot
-axes_dict={'CLIC_hsp27':0,'FLUC_hsp27':1,'Rhod_hsp27':2}
-#title?
-title='Median Hsp27 molecule size, coloc vs. non-coloc'
-
+alls_hsp27=get_medians_for_plotting(hsp27_only, sHsp='hsp27')
 #plot!
-plot_lines_sHsp(alls_hsp27, axes_dict, title, output_folder,CLIC_cols,FLUC_cols, Rhod_cols)
+plot_lines_sHsp(alls_hsp27, axes_dict, title='Median Hsp27 molecule size, coloc vs. non-coloc', output_folder=output_folder,CLIC_cols=CLIC_cols,FLUC_cols=FLUC_cols, Rhod_cols=Rhod_cols)
 
 

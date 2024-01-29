@@ -82,7 +82,6 @@ if __name__ == "__main__":
     CLIC, FLUC = filter_for_client_aBc(input_folder, files, grouping_dict)
     # CLIC.to_csv(f'{output_folder}CLIC.csv')
     # FLUC.to_csv(f'{output_folder}FLUC.csv')
-    chap='aB-c'
     clients=[CLIC, FLUC]
     colour_dict={'CLIC':'Reds', 'FLUC':'Purples'}
 
@@ -90,5 +89,5 @@ if __name__ == "__main__":
         prot_name=b['Protein'].unique()[0]
         palette=colour_dict[prot_name]
         b['log_count']=np.log10(b['last_step_mol_count'])
-        plotting(b, prot_name, palette, output_folder)
+        plotting(b, prot_name, palette, output_folder, chap='aB-c')
 

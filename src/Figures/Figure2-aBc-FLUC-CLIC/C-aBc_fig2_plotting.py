@@ -7,13 +7,6 @@ import seaborn as sns
 from loguru import logger
 
 
-input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'
-output_folder='data/Figures/Figure_2/C-violinplots/'
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
-
-
 def filter_for_client_aBc(input_folder, files, grouping_dict):
     """filters counts data to only include aB-c incubated mols
 
@@ -58,47 +51,50 @@ def filter_for_client_aBc(input_folder, files, grouping_dict):
 
 
 def plotting(df, protein, palette, output_folder):
-    #plot as violinplots the log of subunit count
-    dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
+        #plot as violinplots the log of subunit count
+        dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
-    fig, ax = plt.subplots()
-    ax = sns.violinplot(x="Protein",
-        y="value", 
-        hue="incubated",
-        hue_order=['-sHsp', '+sHsp'],
-        data=dfmelt,  
-        order=['CLIC','FLUC'],
-        scale='width', 
-        palette=palette,
-        saturation=0.5)
-    ax.set_ylabel('# of subunits')
-    ax.set_xlabel(f'aB-c')
-    ax.set_ylim(0,3)
-    plt.legend(title=f'Incubation time (h)', loc='upper right')
-    plt.title(f'{protein} + aBc')
+        fig, ax = plt.subplots()
+        ax = sns.violinplot(x="Protein",
+            y="value", 
+            hue="incubated",
+            hue_order=['-sHsp', '+sHsp'],
+            data=dfmelt,  
+            order=['CLIC','FLUC'],
+            scale='width', 
+            palette=palette,
+            saturation=0.5)
+        ax.set_ylabel('# of subunits')
+        ax.set_xlabel(f'aB-c')
+        ax.set_ylim(0,3)
+        plt.legend(title=f'Incubation time (h)', loc='upper right')
+        plt.title(f'{protein} + aBc')
 
-    plt.savefig(f'{output_folder}_{protein}_log_aBc_stoichiometries.svg')
-    plt.show()
+        plt.savefig(f'{output_folder}_{protein}_log_aBc_stoichiometries.svg')
+        plt.show()
 
-files=[item for item in os.listdir(input_folder)]
-grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
-#filter for clients of interest
-CLIC, FLUC = filter_for_client_aBc(input_folder, files, grouping_dict)
-CLIC.to_csv(f'{output_folder}CLIC.csv')
-FLUC.to_csv(f'{output_folder}FLUC.csv')
+if __name__ == "__main__":
+    input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'
+    output_folder='data/Figures/Figure_2/C-violinplots/'
 
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-#these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
-c2 = CLIC[CLIC['start_end'] == 'end']
-f2 = FLUC[FLUC['start_end'] == 'end']
-combo_v2=pd.concat([c2, f2])
+    files=[item for item in os.listdir(input_folder)]
+    grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
+    #filter for clients of interest
+    CLIC, FLUC = filter_for_client_aBc(input_folder, files, grouping_dict)
+    CLIC.to_csv(f'{output_folder}CLIC.csv')
+    FLUC.to_csv(f'{output_folder}FLUC.csv')
+    #these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
+    c2 = CLIC[CLIC['start_end'] == 'end']
+    f2 = FLUC[FLUC['start_end'] == 'end']
+    combo_v2=pd.concat([c2, f2])
 
-#convert count to log10 count for plotting
-combo_v2['log_count'] = np.log10(combo_v2['last_step_mol_count'])
-#save this file
-combo_v2.to_csv(f'{output_folder}violinplots-fig2.csv')
-df=combo_v2
-palette='Purples'
-protein='CLIC-FLUC-aBc'
-plotting(df, protein, palette, output_folder)
+    #convert count to log10 count for plotting
+    combo_v2['log_count'] = np.log10(combo_v2['last_step_mol_count'])
+    #save this file
+    combo_v2.to_csv(f'{output_folder}violinplots-fig2.csv')
+
+    plotting(df=combo_v2, protein='CLIC-FLUC-aBc', palette='Purples', output_folder=output_folder)
 

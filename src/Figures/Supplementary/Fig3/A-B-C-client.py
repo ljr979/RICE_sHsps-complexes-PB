@@ -38,7 +38,7 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     FLUC=pd.concat(FLUC)
     return CLIC, FLUC, RHOD
 
-def plotting(df, protein, palette, output_folder):
+def plotting(df, protein, palette, output_folder, chap):
     dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
     fig, ax = plt.subplots()
@@ -52,14 +52,13 @@ def plotting(df, protein, palette, output_folder):
         palette=palette,
         saturation=0.5)
     ax.set_ylabel('# of subunits')
-    ax.set_xlabel(f'{protein} in the absence or presence of hsp27')
+    ax.set_xlabel(f'{protein} in the absence or presence of {chap}')
     ax.set_ylim(0,3)
     plt.legend(title=f'Incubation time (h)', loc='upper right')
     plt.title(f'{protein} + hsp27')
 
     #plt.savefig(f'{output_folder}_{protein}_log_hsp27_stoichiometries.svg')
     plt.show()
-
 
 if __name__ == "__main__":
     input_folder= 'data/Figures/violinplots-supp-figs2-3-4/start_finish_filtered/'
@@ -69,8 +68,6 @@ if __name__ == "__main__":
     grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
     CLIC, FLUC , RHOD= filter_for_client_hsp27(input_folder, files, grouping_dict)
 
-    
-    chap='Hsp27'
     clients=[CLIC, FLUC, RHOD]
     colour_dict={'CLIC':'Reds', 'FLUC':'Purples', 'Rhodanese':'Greens'}
 
@@ -78,5 +75,5 @@ if __name__ == "__main__":
         prot_name=b['Protein'].unique()[0]
         palette=colour_dict[prot_name]
         b['log_count']=np.log10(b['last_step_mol_count'])
-        plotting(b, prot_name, palette, output_folder)
+        plotting(b, prot_name, palette, output_folder,chap='Hsp27')
 

@@ -72,9 +72,7 @@ if __name__ == "__main__":
 
     st_summary=[]
     for pair in pairs:
-
         all_ratios_df=pd.read_csv(f'{input_folder}{pair}_ratios_added.csv')
-
         st=kruskal_wallis(all_ratios_df, pair)
         st_summary.append(st)
     st_summary=pd.concat(st_summary)

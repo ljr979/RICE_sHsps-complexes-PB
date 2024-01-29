@@ -83,7 +83,6 @@ if __name__ == "__main__":
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
 
-    chap='hsp27'
 
     files=[item for item in os.listdir(input_folder) ]
     grouping_dict={'FLUC_hsp27': '+client', 'CLIC_hsp27':'+client', 'Rhod_hsp27':'+client', 'None':'-client'}
@@ -105,6 +104,4 @@ if __name__ == "__main__":
     all_hsp27 = all_hsp27.apply(lambda x: x.apply(lambda y: np.nan if y < 0 else y) if np.issubdtype(x.dtype, np.number) else x)
     all_hsp27=all_hsp27.dropna(axis=0)
 
-    df=all_hsp27
-
-    plotting2(df, chap)
+    plotting2(df=all_hsp27, chap='hsp27')

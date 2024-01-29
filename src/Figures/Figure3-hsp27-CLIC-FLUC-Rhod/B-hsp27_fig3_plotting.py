@@ -1,17 +1,12 @@
+"""#this plots the +/- sHsp data at 0 & 7 h incubation for all combined controls and complexes and non-colocalised molecules 
 
+"""
 import os, re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
-#this plots the +/- sHsp data at 0 & 7 h incubation for all combined controls and complexes and non-colocalised molecules 
-
-input_folder= 'data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/start_finish_filtered/'
-output_folder='data/Figures/Figure_3/B-violinplots/'
-
-if not os.path.exists(output_folder):
-    os.makedirs(output_folder)
 
 def filter_for_client_hsp27(input_folder, files, grouping_dict):
     """filter the Hsp27 dataframes to only look at the CLIENT rather than the hsp. return these dataframes for plotting
@@ -78,30 +73,28 @@ def plotting(df, protein, palette, output_folder):
     plt.savefig(f'{output_folder}_{protein}_log_hsp27_stoichiometries.svg')
     plt.show()
 
+if __name__ == "__main__":
+    input_folder='data/Figures/violinplots-supp-figs2-3-coloc-non-coloc-combined/start_finish_filtered/'
+    output_folder='data/Figures/Figure_3/B-violinplots/'
 
-files=[item for item in os.listdir(input_folder)]
-grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
-#filter and organise, and then save these
-CLIC, FLUC , RHOD= filter_for_client_hsp27(input_folder, files, grouping_dict)
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
 
-CLIC.to_csv(f'{output_folder}CLIC.csv')
-FLUC.to_csv(f'{output_folder}FLUC.csv')
-RHOD.to_csv(f'{output_folder}RHOD.csv')
-
-#these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
-    
-c2 = CLIC[CLIC['start_end'] == 'end']
-f2 = FLUC[FLUC['start_end'] == 'end']
-r2 = RHOD[RHOD['start_end'] == 'end']
-
-combo_v2 = pd.concat([c2, f2, r2])
-
-#convert to the log of the number of subunits for plotting!
-combo_v2['log_count'] = np.log10(combo_v2['last_step_mol_count'])
-palette = 'Greens'
-#save this data that is going to be plotted
-combo_v2.to_csv(f'{output_folder}violinplots-fig3.csv')
-df = combo_v2
-protein = 'CLIC-FLUC-rhod-hsp27'
-#plot and save
-plotting(df, protein, palette, output_folder)
+    files=[item for item in os.listdir(input_folder)]
+    grouping_dict={'Non-coloc': '+sHsp', 'Coloc':'+sHsp', 'Control':'-sHsp'}
+    #filter and organise, and then save these
+    CLIC, FLUC , RHOD=filter_for_client_hsp27(input_folder, files, grouping_dict)
+    CLIC.to_csv(f'{output_folder}CLIC.csv')
+    FLUC.to_csv(f'{output_folder}FLUC.csv')
+    RHOD.to_csv(f'{output_folder}RHOD.csv')
+    #these lines filter my previous dfs from being CLIC and fluc alone, with start and finish, to being just the END point, and then concatinates them so that clic and fluc are together, and just the end point.
+    c2=CLIC[CLIC['start_end']=='end']
+    f2=FLUC[FLUC['start_end']=='end']
+    r2=RHOD[RHOD['start_end']=='end']
+    combo_v2 = pd.concat([c2, f2, r2])
+    #convert to the log of the number of subunits for plotting!
+    combo_v2['log_count']=np.log10(combo_v2['last_step_mol_count'])
+    #save this data that is going to be plotted
+    combo_v2.to_csv(f'{output_folder}violinplots-fig3.csv')
+    #plot and save
+    plotting(df=combo_v2, protein='CLIC-FLUC-rhod-hsp27', palette='Greens', output_folder=output_folder)

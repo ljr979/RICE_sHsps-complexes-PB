@@ -226,37 +226,20 @@ def plot_lines_clients(alls_clients, axes_dict, title, output_folder, CLIC_cols,
 aBc_only = filter_for_sHsp_aBc(input_folder, files)
 #save the filtered data which will be plotted
 aBc_only.to_csv(f'{output_folder}aBc_coloc_noncoloc_alltps.csv')
-
 #define the clients present
 clients=['FLUC','CLIC']
 #determine the median and error for each timepoint, colocalised and non-colocalised, for each protein in these experiments
-
 alls_clients=get_medians_for_plotting_clients(clients, aBc_only)
 #made a dictionary to determine which pair you want in which position on your plot- change accordingly! position 0 is top graph, 1 is bottom graph, 2 below that etc. and just change keys to be whatever your pair is defined as
-axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}
-#dictionary to map the client protein colour scheme to the colocalised and non-colocalised conditions within the function
-FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'}
 
-CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'}  
-
-#title of your graph
-title='Median coloc vs non-coloc client (incubated w aB-c) size'
 #where you want to save the plot!
 output_folder='python_results/Fig6_noncolocal_vs_colocal/filtering/abc/'
 #run the plotting function :)
-plot_lines_clients(alls_clients, axes_dict, title, output_folder,CLIC_cols,FLUC_cols)
-
-
+plot_lines_clients(alls_clients, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median coloc vs non-coloc client (incubated w aB-c) size', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
 
 #define the sHsp as it is in the dataframe so you can select for it!
-sHsp=['aB-c']
 #now we do the same for aB-c 
-alls=get_medians_for_plotting(aBc_only, sHsp)
-#match this to the clients plot
-axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}
-#title?
-title='Median aB-c molecule size, coloc vs. non-coloc'
-
+alls=get_medians_for_plotting(aBc_only, sHsp='aB-c')
 #plot!
-plot_lines_sHsp(alls, axes_dict, title, output_folder,CLIC_cols,FLUC_cols)
+plot_lines_sHsp(alls, axes_dict={'CLIC_aB-c':0,'FLUC_aB-c':1}, title='Median aB-c molecule size, coloc vs. non-coloc', output_folder=output_folder,CLIC_cols={'Coloc': '#fe5d26','Non-coloc':'#f2c078'},FLUC_cols={'Coloc': '#564787','Non-coloc':'#dbcbd8'})
 
