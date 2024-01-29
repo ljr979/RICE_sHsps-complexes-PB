@@ -29,15 +29,11 @@ def read_wrangle(input_folder):
 
 def summaries(test):
     #find the average between the replicates, and SEM
-    summary_dict={}
-    for timepoint, df in test.groupby('timepoint'):
-        timepoint
-        df
-        m=mean(df['value'])
-        s=sem(df['value'])
-        ms=[m, s]
-        summary_dict.update({timepoint:ms})
-    summary_df=pd.DataFrame.from_dict(summary_dict, orient='index', columns=['mean', 'sem']).reset_index().rename(columns={'index':'timepoint'})
+    agg_func_math = {
+    'value': [ 'mean',  'sem']
+    }
+    summary_df=test.groupby(['timepoint'], as_index=False).agg(agg_func_math).round(2).reset_index()
+    summary_df.columns = ['_'.join(col).rstrip('_') for col in summary_df.columns.values]
     return summary_df
 
 if __name__ == "__main__":
@@ -73,13 +69,13 @@ if __name__ == "__main__":
     #plotting
     fig, ax = plt.subplots()
     #plot CLIC and aB-c points and error
-    ax=plt.scatter(x=summary_df_CLIC_no7['timepoint'], y=summary_df_CLIC_no7['mean'], c=colors[0], alpha=0.3)
+    ax=plt.scatter(x=summary_df_CLIC_no7['timepoint'], y=summary_df_CLIC_no7['value_mean'], c=colors[0], alpha=0.3)
     #plot the error bar at each point
-    ax=plt.errorbar(x=summary_df_CLIC_no7['timepoint'], y=summary_df_CLIC_no7['mean'], yerr=summary_df_CLIC_no7['sem'], c=colors[0], alpha=0.3)
+    ax=plt.errorbar(x=summary_df_CLIC_no7['timepoint'], y=summary_df_CLIC_no7['value_mean'], yerr=summary_df_CLIC_no7['value_sem'], c=colors[0], alpha=0.3)
 
     #now plot FLUC and aB-c points and error
-    ax1=plt.scatter(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['mean'], c=colors[1], alpha=0.5)
-    ax1=plt.errorbar(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['mean'], yerr=summary_df_FLUC['sem'], c=colors[1], alpha=0.5)
+    ax1=plt.scatter(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['value_mean'], c=colors[1], alpha=0.5)
+    ax1=plt.errorbar(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['value_mean'], yerr=summary_df_FLUC['value_sem'], c=colors[1], alpha=0.5)
 
     #define legend handles
     plt.legend((ax, ax1,),
@@ -90,8 +86,8 @@ if __name__ == "__main__":
             fontsize=12)
 
     #this plots the line that joins the points together, for each protein pair
-    ax=plt.plot(summary_df_CLIC_no7['timepoint'], summary_df_CLIC_no7['mean'],c='#EA9648')
-    ax=plt.plot(summary_df_FLUC['timepoint'], summary_df_FLUC['mean'], c='#9888AA')
+    ax=plt.plot(summary_df_CLIC_no7['timepoint'], summary_df_CLIC_no7['value_mean'],c='#EA9648')
+    ax=plt.plot(summary_df_FLUC['timepoint'], summary_df_FLUC['value_mean'], c='#9888AA')
     ax=plt.tick_params(axis='both', labelsize=16)
     ax=plt.gca()
     ax.set_ylim([0,100])

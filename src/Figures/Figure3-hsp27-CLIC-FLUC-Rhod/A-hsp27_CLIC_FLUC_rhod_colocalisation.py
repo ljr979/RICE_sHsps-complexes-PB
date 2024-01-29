@@ -36,23 +36,12 @@ def read_wrangle(input_folder):
     return test
 
 def summaries(test):
-    """calculate the mean and sem for each datapoint
-
-    Args:
-        test (df): dataframe with all the colocalisation data
-
-    Returns:
-        df: dataframe with the summary information
-    """
-    summary_dict={}
-    for timepoint, df in test.groupby('timepoint'):
-        timepoint
-        df
-        m=mean(df['value'])
-        s=sem(df['value'])
-        ms=[m, s]
-        summary_dict.update({timepoint:ms})
-    summary_df=pd.DataFrame.from_dict(summary_dict, orient='index', columns=['mean', 'sem']).reset_index().rename(columns={'index':'timepoint'})
+    #find the average between the replicates, and SEM
+    agg_func_math = {
+    'value': [ 'mean',  'sem']
+    }
+    summary_df=test.groupby(['timepoint'], as_index=False).agg(agg_func_math).round(2).reset_index()
+    summary_df.columns = ['_'.join(col).rstrip('_') for col in summary_df.columns.values]
     return summary_df
 
 if __name__ == "__main__":
@@ -85,17 +74,17 @@ if __name__ == "__main__":
     #plotting
     #plot scatterplot for CLIC
     fig, ax = plt.subplots()
-    ax=plt.scatter(x=summary_df_CLIC['timepoint'], y=summary_df_CLIC['mean'], c=colors[0], alpha=0.3)
+    ax=plt.scatter(x=summary_df_CLIC['timepoint'], y=summary_df_CLIC['value_mean'], c=colors[0], alpha=0.3)
     #plot error for CLIC
-    ax=plt.errorbar(x=summary_df_CLIC['timepoint'], y=summary_df_CLIC['mean'], yerr=summary_df_CLIC['sem'], c=colors[0], alpha=0.3)
+    ax=plt.errorbar(x=summary_df_CLIC['timepoint'], y=summary_df_CLIC['value_mean'], yerr=summary_df_CLIC['value_sem'], c=colors[0], alpha=0.3)
 
     #now FLUC scatter and error
-    ax1=plt.scatter(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['mean'], c=colors[1], alpha=0.5)
-    ax1=plt.errorbar(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['mean'], yerr=summary_df_FLUC['sem'], c=colors[1], alpha=0.5)
+    ax1=plt.scatter(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['value_mean'], c=colors[1], alpha=0.5)
+    ax1=plt.errorbar(x=summary_df_FLUC['timepoint'], y=summary_df_FLUC['value_mean'], yerr=summary_df_FLUC['value_sem'], c=colors[1], alpha=0.5)
 
     #now rhodanese scatter and error
-    ax2=plt.scatter(x=summary_df_Rhod['timepoint'], y=summary_df_Rhod['mean'], c=colors[2], alpha=0.3)
-    ax2=plt.errorbar(x=summary_df_Rhod['timepoint'], y=summary_df_Rhod['mean'], yerr=summary_df_Rhod['sem'], c=colors[2], alpha=0.5)
+    ax2=plt.scatter(x=summary_df_Rhod['timepoint'], y=summary_df_Rhod['value_mean'], c=colors[2], alpha=0.3)
+    ax2=plt.errorbar(x=summary_df_Rhod['timepoint'], y=summary_df_Rhod['value_mean'], yerr=summary_df_Rhod['value_sem'], c=colors[2], alpha=0.5)
 
     #define the legend handles
     plt.legend((ax, ax1, ax2),
@@ -107,9 +96,9 @@ if __name__ == "__main__":
             fontsize=12)
 
     #now plot the line that joins the scatter points for each protein
-    ax=plt.plot(summary_df_CLIC['timepoint'], summary_df_CLIC['mean'],c='#EA9648')
-    ax=plt.plot(summary_df_FLUC['timepoint'], summary_df_FLUC['mean'], c='#9888AA')
-    ax=plt.plot(summary_df_Rhod['timepoint'], summary_df_Rhod['mean'], c='#46B030')
+    ax=plt.plot(summary_df_CLIC['timepoint'], summary_df_CLIC['value_mean'],c='#EA9648')
+    ax=plt.plot(summary_df_FLUC['timepoint'], summary_df_FLUC['value_mean'], c='#9888AA')
+    ax=plt.plot(summary_df_Rhod['timepoint'], summary_df_Rhod['value_mean'], c='#46B030')
     ax=plt.tick_params(axis='both', labelsize=16)
     ax=plt.gca()
     ax.set_ylim([0,100])
