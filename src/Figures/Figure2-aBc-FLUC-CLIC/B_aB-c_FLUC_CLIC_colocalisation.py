@@ -1,3 +1,6 @@
+"""This script finds the summary data (mean, sem) and then plots, the colocalisation of each client with aB-c (Panel B, figure 2)
+
+"""
 import os, re
 import pandas as pd
 import numpy as np
@@ -47,7 +50,6 @@ if __name__ == "__main__":
     #create output folder if it doesn't exist yet
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
-
 
     #CLIC
     #define the pair you want to work on first (this path to the python results should be defined above)

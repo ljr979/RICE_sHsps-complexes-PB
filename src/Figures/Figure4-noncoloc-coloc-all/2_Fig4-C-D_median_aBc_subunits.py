@@ -1,4 +1,8 @@
+"""
+This script filters all the data for coloc vs non-coloc, in the presence of aB-c, and in the case of CLIC, FLUC AND aB-c, then saves the data as with figs 2&3 for plotting in violinplots.
 
+It also finds the median molecule size for each protein and colocalisation and timepoint, which is what is plotted in Figure 4 (lineplot) then plots them as in Figure 4.
+"""
 
 import os, re
 import pandas as pd
@@ -6,7 +10,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
-#this script needs to filter all the data for coloc vs non-coloc, in the presence of aB-c, and in the case of CLIC, FLUC AND aB-c, then save the data as with figs 3 and 4 for plotting in violinplots.
 
 def filter_for_sHsp_aBc(input_folder, files):
     """read in data and filter for aBc data only

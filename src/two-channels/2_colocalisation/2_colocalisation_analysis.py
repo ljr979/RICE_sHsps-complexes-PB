@@ -1,3 +1,8 @@
+"""finds from colocalisation data, the % of client proteins which are colocalised with a sHsp. Plots over time
+
+
+"""
+
 import pandas as pd
 import os
 import re

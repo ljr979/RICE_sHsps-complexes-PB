@@ -1,5 +1,7 @@
-# gathers and plots the stoichiometry data that was output by py4bleaching.
-#this script is not necessarily plotting the exact matched stoichiometries, just matched data OVERALL. 
+"""Finds the matched molecule sizes, and plots them in a kdeplot
+
+"""
+
 import os
 import re
 import pandas as pd

@@ -1,4 +1,6 @@
-
+"""
+Filters combined controls and complexes and non-colocalised molecule counts for the clients which were incubated with hsp27. Then, plots them as violinplots, showing +/- Hsp27 at both the START an END of the incubation (Supp fig 3, panels A-C)
+"""
 import os, re
 import pandas as pd
 import numpy as np

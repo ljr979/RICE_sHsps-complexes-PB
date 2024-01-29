@@ -1,4 +1,4 @@
-"""#this plots the +/- sHsp data at 0 & 7 h incubation for all combined controls and complexes and non-colocalised molecules 
+"""This plots, for each client incubated with hsp27, the # Of molecules  +/- Hsp27  at  7 h incubation for all combined controls and complexes and non-colocalised molecules (Figure 3, Panel B)
 
 """
 import os, re

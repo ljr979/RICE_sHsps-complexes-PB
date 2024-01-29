@@ -1,4 +1,4 @@
-"""plotting figure 3 hexplots (at each timepoint, the number of subunits in each complex)
+"""plotting figure 3 hexplots (at each timepoint, the number of subunits of each protein, in each complex)(For Hsp27)
 
 """
 import os, re

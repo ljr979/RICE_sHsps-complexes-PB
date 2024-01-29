@@ -1,4 +1,8 @@
+"""
+This script filters all the data for coloc vs non-coloc, in the presence of hsp27, and in the case of CLIC, FLUC, Rhodanese AND Hsp27, then saves the data as with figs 2&3 and 4 for plotting in violinplots.
 
+It also finds the median molecule size for each protein and colocalisation and timepoint, which is what is plotted in Figure 4 (lineplot) then plots them as in Figure 4.
+"""
 
 import os, re
 import pandas as pd

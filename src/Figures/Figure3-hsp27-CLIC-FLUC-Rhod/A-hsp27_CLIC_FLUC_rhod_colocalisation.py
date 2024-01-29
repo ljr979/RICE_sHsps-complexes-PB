@@ -1,3 +1,6 @@
+"""This script finds the summary data (mean, sem) and then plots, the colocalisation of each client with hsp27 (Panel A, Figure 3)
+
+"""
 import os, re
 import pandas as pd
 import numpy as np

@@ -1,3 +1,13 @@
+"""This script finds the matched molecules, and the step size from py4bleaching, and finds the size of each matched molecule for plotting. 
+
+This is appropriate only for those molecules that are IN COMPLEXES. i.e., colocalised hsps and clients, which you want to have 'matched' prior to any analysis. 
+This script matches their molecule names, and then calculates the number of subunits per spot for those matched molecules, according to the median size calculated in py4bleaching analysis. 
+
+Importantly, this matches based on the IMAGEJ output and the folder nesting that these macros outputs.
+
+This is performed before collating any data. i.e. was run on each individual experiment to output 'molecule_size_for_plotting' which is used to plot the hexbin plots.
+
+"""
 import os, re
 import pandas as pd
 import numpy as np
@@ -6,13 +16,6 @@ import seaborn as sns
 from loguru import logger
 import random 
 from matplotlib import colors
-
-#this script is appropriate only for those molecules that are IN COMPLEXES. i.e., colocalised hsps and clients, which you want to have 'matched' prior to any analysis. 
-#this script matches their molecule names, and then calculates the number of subunits per spot for those matched molecules, according to the median size calculated in py4bleaching analysis. 
-#importantly, this matches based on the IMAGEJ output and the folder nesting that these macros outputs.
-
-#this is performed before collating any data. i.e. was run on each individual experiment to output 'molecule_size_for_plotting' which is used to plot the hexbin plots.
-
 def grab_trajectories_paths_only(input_folder, timepoint_folders):
     hsp_trajectories_paths=[]
     client_trajectories_pahts=[]

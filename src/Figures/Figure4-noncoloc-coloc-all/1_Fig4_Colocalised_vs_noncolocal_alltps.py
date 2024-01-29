@@ -1,4 +1,9 @@
+"""This script organises the data for plotting in Figure 4(Coloc v non-coloc molsize). 
 
+Gathers the data which was cleaned and organised in preparation for figures2 and 3, and then combines non colocalised and colocalised files but with separate names so we can split them, and makes sure ALL timepoints are here (in figs 2 and 3, we only had the start and end of the experiment)
+
+
+"""
 import os, re
 import pandas as pd
 import numpy as np
@@ -46,7 +51,7 @@ def read_counts_all(collated_stoich_files):
     alls['Pair']=alls['Pair'].map(pairs_dict)
     return alls
 
-#this script just organises the data for plotting in the next plots. gathers the data which was cleaned and organised in preparation for figures2 and 3, and then combines non colocalised and colocalised files but with separate names so we can split them, and makes sure ALL timepoints are here (in figs 2 and 3, we only had the start and end of the experiment)
+
 if __name__ == "__main__":
     input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/'
     output_folder='python_results/Figure_4/'

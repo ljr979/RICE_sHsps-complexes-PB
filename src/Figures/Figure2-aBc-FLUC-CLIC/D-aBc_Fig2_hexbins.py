@@ -1,6 +1,4 @@
-"""#plots the hexbin plots for figure 2. This is a hexbin plot for all complexes at EACH timepoint, with the y axis being # of subunits of hsp, and the x axis being # of subunits of the matching client molecule. 
-
-
+"""#plots the hexbin plots for figure 2. This is a hexbin plot for all complexes at EACH timepoint, with the y axis being # of subunits of hsp, and the x axis being # of subunits of the matching client molecule.  (For aB-c)
 Returns:
     hexbinplot
 """

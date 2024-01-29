@@ -1,11 +1,12 @@
+"""Finds the molecule size of the clients that were incubated with aB-c, and plots them as violinplots (Figure 2, Panel C)(includes combined controls and complexes and non-colocalised molecules )
 
+"""
 import os, re
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
-
 
 def filter_for_client_aBc(input_folder, files, grouping_dict):
     """filters counts data to only include aB-c incubated mols
@@ -48,7 +49,6 @@ def filter_for_client_aBc(input_folder, files, grouping_dict):
     
     FLUC=pd.concat(FLUC)
     return CLIC, FLUC
-
 
 def plotting(df, protein, palette, output_folder):
         #plot as violinplots the log of subunit count

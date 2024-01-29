@@ -1,3 +1,6 @@
+"""Matches the trajectories from within colocalised spots (complexes) to each other and then saves them with a new molecule name which helps to identify them as being within complexes. These can then be run through py4bleaching and keep the info about which ones were colocalised with which
+
+"""
 import os
 import re
 import pandas as pd
@@ -6,8 +9,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
 import random
-#this input should be the location of raw trajectory files, for coloc and non-colocalised proteins (both client and sHsp), at each timepoint.(/Trajectories folder content from the imagej processing script). 
-#this should be structured as /data/timepoint/coloc&non-coloc/.csv files (these files should be numbered / labelled as the NAME)
+
 
 def grab_trajectories_paths_only(inputt, client, hsp, tp_folder):
     """Function to grab all trajectory files and filter for those only colocalised.
@@ -109,7 +111,8 @@ def reshape_data(df):
 
 
 if __name__ == "__main__":    
-
+    #this input should be the location of raw trajectory files, for coloc and non-colocalised proteins (both client and sHsp), at each timepoint.(/Trajectories folder content from the imagej processing script). 
+    #this should be structured as /data/timepoint/coloc&non-coloc/.csv files (these files should be numbered / labelled as the NAME)
     inputt= 'data/example_raw_trajectory_data/'
     output_folder = 'python_results/'
 
