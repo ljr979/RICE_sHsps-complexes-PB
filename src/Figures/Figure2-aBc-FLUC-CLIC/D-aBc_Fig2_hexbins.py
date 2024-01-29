@@ -1,3 +1,10 @@
+"""#plots the hexbin plots for figure 2. This is a hexbin plot for all complexes at EACH timepoint, with the y axis being # of subunits of hsp, and the x axis being # of subunits of the matching client molecule. 
+
+
+Returns:
+    hexbinplot
+"""
+
 import os, re
 import pandas as pd
 import numpy as np
@@ -7,7 +14,6 @@ import seaborn as sns
 from loguru import logger
 import random 
 from matplotlib.colors import ListedColormap, LinearSegmentedColormap
-#plots the hexbin plots for figure 2. This is a hexbin plot for all complexes at EACH timepoint, with the y axis being # of subunits of hsp, and the x axis being # of subunits of the matching client molecule. 
 
 def read_counts(input_folder):
     """reads in the df which is formatted with matched molecule counts, pivoted to plot. concatinates multiple if necessary
@@ -84,7 +90,7 @@ def create_custom_colourmap(cmap, n_colors):
    
     return cm
 
-def plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cmap_axes):      
+def plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, gridsize, extent, xlimo, ylimo, cm, cmap_axes):      
     """PLOTS the hexbins as however many timepoints as you had.
 
     Args:
@@ -108,7 +114,8 @@ def plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cm
         timepoint
         df
         # Add hexbin with set vmin, vax
-        hexplot = axes[x].hexbin(df['client'], df['hsp'], gridsize=30, cmap=cm, vmin=vmin, vmax=vmax)
+        hexplot = axes[x].hexbin(df['client'], df['hsp'],gridsize=gridsize,
+        extent=extent, cmap=cm, vmin=vmin, vmax=vmax)
         sns.kdeplot(df['client'], df['hsp'], color='darkgrey', linestyles='--', levels=np.arange(0, 1, 0.1), ax=axes[x])
         axes[x].set_xlim(0 , xlimo)
         axes[x].set_ylim(0, ylimo)
@@ -120,80 +127,62 @@ def plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cm
     cb.set_label('Count')
     return fig, axes
 
+def functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair, cmap, ylimo, xlimo, gridsize, nrows, ncols, n_colors, vmin, vmax, cmap_axes, counts_collated):
+    """runs the functions and outputs the hexbinplots for each pair of client/sHsp
+
+    Args:
+        calc_ratios (function): calculates the sHsp : client ratios
+        create_custom_colourmap (function): creates a colourmap with limits you define
+        plot_hexbin_kde (function): does the plotting
+        output_folder (str): where to save the plots
+        pair (str): the client and sHsp you're plotting
+        cmap (str): the colours to make the colormap from
+        ylimo (int): plotting limit (change according to the data you're plotting)
+        xlimo (int): plotting limit (change according to the data you're plotting)
+        nrows (int): number of timepoints in that dataset
+        ncols (int): nrows -1
+        n_colors (int): number of shades in your colourmap
+        vmin (int): this is how you keep the same colour scale across timepoints
+        vmax (int): this is how you keep the same colour scale across timepoints
+        cmap_axes (int): _description_
+        counts_collated (df): all the collated counts
+    """
+    counts_collated, dicto, complexes_count=calc_ratios(counts_collated, pair)
+    #exclude last timepoint because FLUC does not have this same timepoint
+    counts_collated=counts_collated[counts_collated['timepoint (min)']!=420.0]
+    extent=[0, np.max(counts_collated['client']), 0, np.max(counts_collated['client'])]
+    cm=create_custom_colourmap(cmap, n_colors)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(2,10), gridspec_kw={'height_ratios': [7, 7, 7, 7, 7, 0.5] })
+    fig, axes=plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, gridsize, extent, xlimo, ylimo, cm, cmap_axes)
+    #fig.savefig(f'{output_folder}{pair}.svg')
+    #fig.savefig(f'{output_folder}{pair}.png')
+    plt.show()
 
 if __name__ == "__main__":
-        
+    
+    #set font parameters
+    font = {
+        'family' : 'arial',
+        'weight' : 'normal',
+        'size'   : 12
+    }
+    plt.rc('font', **font)
+    plt.rcParams['svg.fonttype']= 'none'
+
     input_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/CLIC_aB-c/'
     output_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/'
 
     if not os.path.exists(output_folder):
             os.makedirs(output_folder)
 
-
-    #set font parameters
-    font = {
-        'family' : 'arial',
-        'weight' : 'normal',
-        'size'   : 8
-    }
-    plt.rc('font', **font)
-    plt.rcParams['svg.fonttype']= 'none'
-    #change this for each pair of client:sHsp
-    pair='CLIC and aB-c'
-    #different colour for each pair
-    cmap='Reds'
-    #specify according to the data
-    ylimo=20
-    xlimo=20
-    nrows=6
-    ncols=1
-    n_colors=50
-    vmin=0
-    vmax=5
-    
-    cmap_axes=nrows-1
-
     counts_collated=read_counts(input_folder=input_folder)
-
-    counts_collated, dict_ratios, CLIC_complexes_count=calc_ratios(counts_collated, pair)
-    #exclude last timepoint because FLUC does not have this same timepoint
-    counts_collated=counts_collated[counts_collated['timepoint (min)']!=420.0]
-    cm=create_custom_colourmap(cmap, n_colors)
-    fig, axes = plt.subplots(nrows, ncols, figsize=(5, 28), gridspec_kw={'height_ratios': [4, 4, 4, 4, 4, 0.5] })
-    fig, axes=plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cmap_axes)
-    fig.savefig(f'{output_folder}{pair}.svg')
-    fig.savefig(f'{output_folder}{pair}.png')
-    plt.show()
-        
-
-
+    #specify the function inputs depending on the pair of proteins (colour, x and y limits, etc.)
+    functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='CLIC and aB-c', cmap='Reds', ylimo=20, xlimo=20, gridsize=(30,20), nrows=6, ncols=1, n_colors=50, vmin=0, vmax=5, cmap_axes=5, counts_collated=counts_collated)
 
     #now for FLUC!    
     input_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/FLUC_aB-c/'
     output_folder = 'data/Figures/Figure_2/D-matched_hexbins/aB-c/'
 
-    #change this for each pair of client:sHsp
-    pair='FLUC and aB-c'
-
-    cmap='Purples'
-
-    ylimo=40
-    xlimo=30
-    nrows=6
-    ncols=1
-    n_colors=50
-    vmin=0
-    vmax=10
-    cmap_axes=nrows-1
-
     counts_collated=read_counts(input_folder=input_folder)
-    counts_collated, dict_ratios, FLUC_complexes_count=calc_ratios(counts_collated, pair)
-    cm=create_custom_colourmap(cmap, n_colors)
-
-    fig, axes = plt.subplots(nrows, ncols, figsize=(5, 28), gridspec_kw={'height_ratios': [4, 4, 4, 4, 4, 0.5], })
-    fig, axes=plot_hexbin_kde(fig, axes, counts_collated, vmin, vmax, xlimo, ylimo, cm, cmap_axes)
-    fig.savefig(f'{output_folder}{pair}.svg')
-    fig.savefig(f'{output_folder}{pair}.png')
-    plt.show()
-
+    functional(calc_ratios, create_custom_colourmap, plot_hexbin_kde, output_folder, pair='FLUC and aB-c', cmap='Purples', ylimo=40, xlimo=30, gridsize=(22,12), nrows=6, ncols=1, n_colors=50, vmin=0, vmax=10, cmap_axes=5, counts_collated=counts_collated)
 
