@@ -1,7 +1,6 @@
 """Finds the matched molecule sizes, and plots them in a kdeplot
 
 """
-
 import os
 import re
 import pandas as pd
@@ -82,20 +81,20 @@ def truncate_colormap(cmap, minval=0.1, maxval=0.7, n=50):
     return new_cmap
 
 if __name__ == "__main__":    
-    input_folder='python_output/1_trajectory_analysis/'
-    output_folder='src/two-channels/3_stoichiometries/'
+    input_folder = 'python_output/1_trajectory_analysis/'
+    output_folder = 'src/two-channels/3_stoichiometries/'
 
     #find all molecule_counts files in your input folder (this should be where the py4bleaching output was)
     molecule_count_list = [[f'{root}/{filename}' for filename in files if ' molecule_counts.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
 
-    molecule_count_list=[item for sublist in molecule_count_list for item in sublist]
-    molecule_counts=concat(molecule_count_list)
+    molecule_count_list = [item for sublist in molecule_count_list for item in sublist]
+    molecule_counts = concat(molecule_count_list)
     molecule_counts.to_csv(f'{output_folder}combined_mol_counts.csv')
 
 
-    molecule_pivot=pd.pivot(molecule_counts,index=['treatment', 'Unique_ID'], columns='protein', values='last_step_mol_count').reset_index()
-    molecule_pivot['client']=molecule_pivot['client'].astype(float)
-    molecule_pivot['hsp']=molecule_pivot['hsp'].astype(float)
+    molecule_pivot = pd.pivot(molecule_counts,index=['treatment', 'Unique_ID'], columns='protein', values='last_step_mol_count').reset_index()
+    molecule_pivot['client'] = molecule_pivot['client'].astype(float)
+    molecule_pivot['hsp'] = molecule_pivot['hsp'].astype(float)
     molecule_pivot.to_csv(f'{output_folder}molecule_counts_plots_collated.csv')
 
     #-------------------

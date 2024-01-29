@@ -52,7 +52,7 @@ if __name__ == "__main__":
 
     #concatinate any of the same name (molecule_counts) into one big file. This would be e.g. from different time points that are in separate files etc.
 
-    molecule_counts=concatinate_data(stoich_files)
+    molecule_counts = concatinate_data(stoich_files)
     df = pd.melt(molecule_counts, id_vars=['protein', 'colocalisation', 'molecule_number',
                                         'treatment', 'timepoint'], value_vars=['last_step_mol_count'])
 

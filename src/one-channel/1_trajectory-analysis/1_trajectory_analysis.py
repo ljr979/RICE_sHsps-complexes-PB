@@ -1,3 +1,5 @@
+"""runs 'py4bleaching' on trajectories files to get molecule size
+"""
 from src.py4bleaching.py4bleaching import analysis
 
 #input is the path to the imagejresults folder containing trajectories files. output_folder is python_results and whatever treatment you want it to be nested within

@@ -194,21 +194,17 @@ if __name__ == "__main__":
     #list names of columns
     column_names = ['timepoint', 'protein', 'total number of proteins',
                     'colocalised proteins', 'percent colocalisation']
-    percent_colocalisation_all = pd.DataFrame(
-        [item for sublist in percent_colocalisation_all for item in sublist])
+    percent_colocalisation_all = pd.DataFrame([item for sublist in percent_colocalisation_all for item in sublist])
     #assign column names based on list defined
     percent_colocalisation_all.columns = column_names
     #save it
-    percent_colocalisation_all.to_csv(
-        f'{output_folder}percent_colocalisation_all.csv')
+    percent_colocalisation_all.to_csv(f'{output_folder}percent_colocalisation_all.csv')
 
     #changes the timepoint column from minutes into integers that represent hours, so that the scatter plot is scaled for hours on the x axis correctly (rather than equal distance between timepoints)
     timepoint_dict = {'zero': 0, '15min': 0.25,
                     '30min': 0.5, '240min': 4, '60min': 1, '420min': 7}
-    percent_colocalisation_all['timepoint'] = percent_colocalisation_all['timepoint'].map(
-        timepoint_dict)
-    for_plotting = pd.melt(percent_colocalisation_all, id_vars=[
-                        'timepoint', 'protein'], value_vars='percent_colocalisation')
+    percent_colocalisation_all['timepoint'] = percent_colocalisation_all['timepoint'].map(timepoint_dict)
+    for_plotting = pd.melt(percent_colocalisation_all, id_vars=['timepoint', 'protein'], value_vars='percent_colocalisation')
 
     #this plots the colocalisation for this experiment
     scatter_plot_client(for_plotting, output_folder)
