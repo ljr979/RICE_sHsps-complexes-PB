@@ -6,7 +6,14 @@ import pandas as pd
 import os
 
 def concatinate_data(stoich_files):
+    """concatinate all stoichiometry files in list
 
+    Args:
+        stoich_files (list ): list of filepaths
+
+    Returns:
+        df: df with all mol counts together
+    """
     molecule_counts = []
 
     for filepath in stoich_files:

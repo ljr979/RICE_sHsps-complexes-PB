@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
 
-#this script finds the molecules that are colocalised (in complexes) and quantifies this for each timepoint
 def collate(data_files):
     """this function acts to gather the cleaned trajectories that came from py4bleaching, and to split up the molecule name into metadata that is easier to filter for later.
 
@@ -41,7 +40,23 @@ def collate(data_files):
     return molecules
 
 def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
-    #for each timepoint find the total number of HSPS (this script is not client molecules) that are colocalised and report as a %. append this to a list for each timepoint
+    """for each timepoint find the total number of HSPS (this script is not client molecules) that are colocalised and report as a %. append this to a list for each timepoint
+
+    Args:
+        timepoints (list): timepoints
+        shsp (str): shsp of interes
+        zero (list): these are all lists that can be appended to
+        fifteen (_type_): _description_
+        thirty (_type_): _description_
+        sixty (_type_): _description_
+        three_hour (_type_): _description_
+        four_hour (_type_): _description_
+        seven_hour (_type_): _description_
+
+    Returns:
+        list: a bunch of lists with coloc data in them for each tp
+    """
+    #
     #find % colocalisation for shsps over time
     for timepoint in timepoints:
         timepoint
@@ -73,7 +88,22 @@ def calculate_sHsp_coloc(timepoints, shsp, zero, fifteen, thirty, sixty, three_h
     return zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour
 
 def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour):
-    #
+    """for each timepoint find the total number of CLIENTS  that are colocalised and report as a %. append this to a list for each timepoint
+
+    Args:
+        timepoints (list): timepoints
+        shsp (str): shsp of interes
+        zero (list): these are all lists that can be appended to
+        fifteen (_type_): _description_
+        thirty (_type_): _description_
+        sixty (_type_): _description_
+        three_hour (_type_): _description_
+        four_hour (_type_): _description_
+        seven_hour (_type_): _description_
+
+    Returns:
+        list: a bunch of lists with coloc data in them for each tp
+    """
     #find % colocalisation for client over time
     for timepoint in timepoints:
         timepoint
@@ -100,6 +130,12 @@ def calculate_client_coloc(timepoints, client, zero, fifteen, thirty, sixty, thr
     return zero, fifteen, thirty, sixty, three_hour, four_hour, seven_hour
 
 def scatter_plot_client(for_plotting, output_folder):
+    """plot CLIENT colocalisation at each timepoint as a lineplot
+
+    Args:
+        for_plotting (df): df with the colocalisation
+        output_folder (str): where to save
+    """
     #filter for only the client colocalisation
     client_only = for_plotting[for_plotting['protein'] == 'client']
     #plot as a scatterplot

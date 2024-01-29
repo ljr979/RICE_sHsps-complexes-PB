@@ -51,27 +51,35 @@ def filter_for_client_aBc(input_folder, files, grouping_dict):
     return CLIC, FLUC
 
 def plotting(df, protein, palette, output_folder):
-        #plot as violinplots the log of subunit count
-        dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
+    """plot as violinplots the log of subunit count
 
-        fig, ax = plt.subplots()
-        ax = sns.violinplot(x="Protein",
-            y="value", 
-            hue="incubated",
-            hue_order=['-sHsp', '+sHsp'],
-            data=dfmelt,  
-            order=['CLIC','FLUC'],
-            scale='width', 
-            palette=palette,
-            saturation=0.5)
-        ax.set_ylabel('# of subunits')
-        ax.set_xlabel(f'aB-c')
-        ax.set_ylim(0,3)
-        plt.legend(title=f'Incubation time (h)', loc='upper right')
-        plt.title(f'{protein} + aBc')
+    Args:
+        df (df): dataframe with the combined molecule counts for each client
+        protein (str): the client protein which is being plotted
+        palette (str): colour to plot
+        output_folder (str): where to save
+    """
+    
+    dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
-        plt.savefig(f'{output_folder}_{protein}_log_aBc_stoichiometries.svg')
-        plt.show()
+    fig, ax = plt.subplots()
+    ax = sns.violinplot(x="Protein",
+        y="value", 
+        hue="incubated",
+        hue_order=['-sHsp', '+sHsp'],
+        data=dfmelt,  
+        order=['CLIC','FLUC'],
+        scale='width', 
+        palette=palette,
+        saturation=0.5)
+    ax.set_ylabel('# of subunits')
+    ax.set_xlabel(f'aB-c')
+    ax.set_ylim(0,3)
+    plt.legend(title=f'Incubation time (h)', loc='upper right')
+    plt.title(f'{protein} + aBc')
+
+    plt.savefig(f'{output_folder}_{protein}_log_aBc_stoichiometries.svg')
+    plt.show()
 
 if __name__ == "__main__":
     input_folder= 'data/Figures/violinplots-supp-figs2-3-4-coloc-non-coloc-combined/start_finish_filtered/'

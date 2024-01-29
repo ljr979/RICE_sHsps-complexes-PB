@@ -49,7 +49,14 @@ def filter_outlier(df, threshold_dict):
     return df
 
 def get_medians_for_plotting(sHsp_only, sHsp):
+    """find median and error of # of subunits at each timepoint
+    Args:
+        sHsp_only (df): df with all of the information to filter on
+        sHsp (str): the sHsp of interest
 
+    Returns:
+        df: df containing medians and error for sHsp
+    """
 
     sHsp=sHsp_only[sHsp_only['Protein'].isin(sHsp)]
     df1=sHsp
@@ -75,6 +82,17 @@ def get_medians_for_plotting(sHsp_only, sHsp):
     return alls
 
 def plot_lines_sHsp(alls, axes_dict, title, output_folder, CLIC_cols, FLUC_cols, Rhod_cols):
+    """plot the CLIENT median and error over time between colocalised and non-coloc. matches the corresponding HSP which was plotted in plot_lines_sHsp
+
+    Args:
+        alls_clients (df): client colocalisation
+        axes_dict (dict): dictionary with the axes location of each client plot
+        title (str): what to label your graph
+        output_folder (str): save 
+        CLIC_cols (dict): colours to use for each client
+        FLUC_cols (dict): colours to use for each client
+    """
+
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(9,11))
     axes_dict=axes_dict
     for group, df in alls.groupby(['pair']): 
@@ -137,7 +155,15 @@ def plot_lines_sHsp(alls, axes_dict, title, output_folder, CLIC_cols, FLUC_cols,
     plt.show()
 
 def get_medians_for_plotting_clients(clients, hsp27_only):
+    """same as get_medians_for_plotting but just for the clients
 
+    Args:
+        clients (list): list of strings which match the name of the clients which you want to subset this data on
+        hsp27_only (df): the dataframe which includes only those molecules which relate to the aB-c analysis
+
+    Returns:
+        df: df containing medians and error for CLIENTs
+    """
 
     CLIENTS=hsp27_only[hsp27_only['Protein'].isin(clients)]
     df1=CLIENTS
@@ -166,7 +192,17 @@ def get_medians_for_plotting_clients(clients, hsp27_only):
     return alls
 
 def plot_lines_clients(alls_clients, axes_dict, title, output_folder, CLIC_cols, FLUC_cols, Rhod_cols):
+    """plots molecule size of non coloc and coloc molecules, at each timepoint (+ error)
 
+    Args:
+        alls_clients (df): df with mol size of all clients
+        axes_dict (dict): dictionary with the location to plot each client
+        title (str): name of plot
+        output_folder (str): where to save
+        CLIC_cols (dict): two colours to plot coloc or non-coloc
+        FLUC_cols (dict): two colours to plot coloc or non-coloc
+        Rhod_cols (dict): two colours to plot coloc or non-coloc
+    """
     fig, axes = plt.subplots(nrows=3, ncols=1, sharex=True, figsize=(9,11))
     axes_dict=axes_dict
     for group, df in alls_clients.groupby(['pair']): 

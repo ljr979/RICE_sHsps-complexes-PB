@@ -16,7 +16,17 @@ import seaborn as sns
 from loguru import logger
 import random 
 from matplotlib import colors
+
 def grab_trajectories_paths_only(input_folder, timepoint_folders):
+    """finds all the files with trajectories within them, the full path so it can be read in in the next function
+
+    Args:
+        input_folder (str): input folder path
+        timepoint_folders (list): list of folders which should each be a time point
+
+    Returns:
+        list: a list for hsp, and a list for client trajectories paths
+    """
     hsp_trajectories_paths=[]
     client_trajectories_pahts=[]
     #loop over each timepoint folder containing images and trajectories outputs
@@ -49,7 +59,16 @@ def grab_trajectories_paths_only(input_folder, timepoint_folders):
     return hsp_trajectories_paths, client_trajectories_pahts
 
 def read_trajectories(hsp_trajs, clients):
-    #matches trajectories to one another and saves path information and timepoint information for later on.
+    """matches trajectories to one another and saves path information and timepoint information for later on. gives them unique mol names
+
+    Args:
+        hsp_trajs (list): list of paths to trajectories files for each type of protein
+        clients (list): list of paths to trajectories files for each type of protein
+
+    Returns:
+        df: df with all trajectories and new mol names
+    """
+    
     new=[]
     for trajectory in hsp_trajs:
         #loop over hsp trajectories paths and read them in
@@ -90,7 +109,17 @@ def read_trajectories(hsp_trajs, clients):
     return new
 
 def matched_counts(new, step_sizes_hsp, step_sizes_client):
-    #calculates the number of subunits per molecule, using the median step size gathered from py4bleaching
+    """calculates the number of subunits per molecule, using the median step size gathered from py4bleaching
+
+    Args:
+        new (df): dataframe with the molecule counts in them
+        step_sizes_hsp (df): step sizes read in here, but calculated from py4bleaching form all molecules in this entire experiment
+        step_sizes_client (df): step sizes read in here, but calculated from py4bleaching form all molecules in this entire experiment
+
+    Returns:
+        _type_: _description_
+    """
+    
     molecule_counts = []
     #loop over each trajectory at each timepoint
     for (molecule,timepoint), df in new.groupby(['molecule_number', 'timepoint (min)']):

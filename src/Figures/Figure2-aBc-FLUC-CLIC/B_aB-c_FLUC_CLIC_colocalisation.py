@@ -11,8 +11,13 @@ from statistics import mean as mean
 from scipy.stats import sem
 
 def read_wrangle(input_folder):
-    #this function finds and organises all colocalisation data for plotting
+    """this function finds and organises all colocalisation data for plotting
+    Args:
+        input_folder (str): folder containing the colocalisation data for a specific pair of proteins
 
+    Returns:
+        df: dataframe with the colocalisation data
+    """
     #find all files for this pair of proteins
     coloc_files=[filename for filename in os.listdir(f'{input_folder}') if 'percent_colocalisation_all' in filename]
     coloc_all=[]
@@ -31,7 +36,15 @@ def read_wrangle(input_folder):
     return test
 
 def summaries(test):
-    #find the average between the replicates, and SEM
+    """Find the average between the replicates, and SEM
+
+    Args:
+        test (df): dataframe with the colocalisation data
+
+    Returns:
+        df: dataframe with the summaries in it
+    """
+    
     agg_func_math = {
     'value': [ 'mean',  'sem']
     }

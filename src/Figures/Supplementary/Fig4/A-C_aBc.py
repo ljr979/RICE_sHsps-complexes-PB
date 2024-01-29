@@ -8,6 +8,15 @@ import seaborn as sns
 from loguru import logger
 
 def plotting(df1, pair, protein, sHsp, palette_dict):
+    """plots the coloc v non-coloc MOL SIZE data as a violinplot , for each protein incubated with aB-c (including aB-c)
+
+    Args:
+        df1 (df): dataframe with the mol size information of all molecules incubated with aB-c
+        pair (str): the pair incubated to produce these molecule sizes
+        protein (str): the protein being plotted
+        sHsp (str): the chaperone being incubated with
+        palette_dict (dict): the colour to plot the data in
+    """
     for group, df in df1.groupby(['Protein']): 
         dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair'], value_vars=['last_step_mol_count'])
         group

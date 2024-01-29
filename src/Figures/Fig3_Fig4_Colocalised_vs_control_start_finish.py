@@ -1,4 +1,6 @@
+"""This script collates all of the non-colocalised and colocalised and control molecule_counts data from py4bleaching, so that we can then plot them together at the start and end of the incubation, without distinguishing between non-colocalised and co-localised status.
 
+"""
 import os, re
 import pandas as pd
 import numpy as np
@@ -6,7 +8,6 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from loguru import logger
 
-#this script collates all of the non-colocalised and colocalised and control molecule_counts data from py4bleaching, so that we can then plot them together at the start and end of the incubation, without distinguishing between non-colocalised and co-localised status.
 def read_counts_controls(stoich_files_controls):
     """Reads in and organises stoichiometry files for controls (i.e., size of clients and sHsps in the absence of each other). The purpose is to make sure the dataframe from these molecules matches the dataframes from colocalised and non-colocalised molecules, so we can make them into a combined dataframe to plot later.
 
@@ -77,7 +78,15 @@ def read_counts_controls(stoich_files_controls):
     return all_start_fin_final
 
 def read_counts_noncoloc(stoich_files_noncoloc):
+    """need to read in the non-colocalised (but incubated together) counts, and make sure the data structure and column names etc. match, so we can smoosh these all togheter and they will match for plotting. 
 
+
+    Args:
+        stoich_files_noncoloc (list): files containin ghte molecule size of all non-colocalised molecules
+
+    Returns:
+        df: dataframe with the non-coloc molecules in the correct format
+    """
     cols_to_keep=[
         'molecule_number',
         'last_step_mol_count', 
@@ -139,6 +148,14 @@ def read_counts_noncoloc(stoich_files_noncoloc):
     #now need to read in all of the dataframes where I used the matched 
 
 def read_colocal_counts_together(stoich_files_coloc):
+    """now to find all the ones that are not CONTROL, but are non-coloc and coloc (incubated with each other)
+
+    Args:
+        stoich_files_coloc (list): list of all files with the coloc and non-coloc molecules
+
+    Returns:
+        _type_: _description_
+    """
     alls_coloc_filtered_start_fin=[]
     for filename in stoich_files_coloc:
         #read in file
@@ -190,8 +207,6 @@ if __name__ == "__main__":
 
     stoich_files_controls =[[f'{root}/{filename}' for filename in files if 'molecule_counts.csv' in filename] for root, dirs, files in os.walk(f'{input_folder}')]
     stoich_files_controls=[item for sublist in stoich_files_controls for item in sublist]
-
-
     #now filter all the controls so that I just have start and end point!
     controls_only_start_fin=read_counts_controls(stoich_files_controls)
     #save them fore filtering and plotting later

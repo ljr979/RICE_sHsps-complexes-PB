@@ -9,7 +9,16 @@ import seaborn as sns
 from loguru import logger
 
 def filter_for_client_hsp27(input_folder, files, grouping_dict):
-        
+    """filters molecule size for the molecules incubated with hsp27, and finds the start and end timepoints, and all mol sizes in these times
+
+    Args:
+        input_folder (str): where the data is
+        files (list): list of files to loop over and read in
+        grouping_dict (dict): dictionary which says what the 'incubated' col should be ( + or - sHsp)
+
+    Returns:
+        df: a df for each client molecule, with the star tand finish mol sizes for each
+    """        
     CLIC=[]
     FLUC=[]
     RHOD=[]
@@ -41,6 +50,15 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     return CLIC, FLUC, RHOD
 
 def plotting(df, protein, palette, output_folder, chap):
+    """plot the molecule sizes for a client protein at the start and end of incubation, + / - sHsp
+
+    Args:
+        df (df): df with the mol size data
+        protein (str): the client protein you're plotting
+        palette (str): the colour to plot them
+        output_folder (str): where to save
+        chap (str): name of chap you've incubated the client with
+    """
     dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
     fig, ax = plt.subplots()

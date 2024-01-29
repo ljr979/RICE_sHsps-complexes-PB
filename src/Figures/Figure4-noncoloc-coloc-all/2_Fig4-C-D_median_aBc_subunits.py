@@ -41,22 +41,15 @@ def filter_for_sHsp_aBc(input_folder, files):
 
     return aBc
 
-def filter_outlier(df, threshold_dict):
-    #this just filters out if you notice there are any crazy outliers and you have determined them as such
-    protein=df['Protein'].tolist()[0]
-    threshold=threshold_dict[protein]
-    df = df[df['last_step_mol_count'] < threshold]
-    return df
-
 def get_medians_for_plotting(sHsp_only, sHsp):
-    """calculates medians and sem of the HSP molecules for each pair 
+    """calculates medians and sem of the HSP molecule size for each pair 
 
     Args:
         sHsp_only (df): the dataframe that was obtained by filtering for the specific hsp of interest
         sHsp (str): the sHsp of interest
 
     Returns:
-        df: medians and error at each timepoint for each protein and each colocalisation
+        df: medians and error at each timepoint for each protein and each colocalisation type
     """
     #check if the protein column contains the protein of interest and filter on that
     sHsp=sHsp_only[sHsp_only['Protein'].isin(sHsp)]
@@ -178,7 +171,17 @@ def get_medians_for_plotting_clients(clients, aBc_only):
     return alls
 
 def plot_lines_clients(alls_clients, axes_dict, title, output_folder, CLIC_cols, FLUC_cols):
-    #plot the CLIENT median and error over time between colocalised and non-coloc. matches the corresponding HSP which was plotted in plot_lines_sHsp
+    """plot the CLIENT median and error over time between colocalised and non-coloc. matches the corresponding HSP which was plotted in plot_lines_sHsp
+
+    Args:
+        alls_clients (df): client colocalisation
+        axes_dict (dict): dictionary with the axes location of each client plot
+        title (str): what to label your graph
+        output_folder (str): save 
+        CLIC_cols (dict): colours to use for each client
+        FLUC_cols (dict): colours to use for each client
+    """
+
     fig, axes = plt.subplots(nrows=2, ncols=1, sharex=True, figsize=(9,11))
     axes_dict=axes_dict
     for group, df in alls_clients.groupby(['pair']): 

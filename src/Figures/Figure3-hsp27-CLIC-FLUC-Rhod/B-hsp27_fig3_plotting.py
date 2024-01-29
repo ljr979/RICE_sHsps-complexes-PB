@@ -51,7 +51,14 @@ def filter_for_client_hsp27(input_folder, files, grouping_dict):
     return CLIC, FLUC, RHOD
 
 def plotting(df, protein, palette, output_folder):
-    #melt dataframe
+    """plot as violinplots the log of subunit count
+
+    Args:
+        df (df): dataframe with the combined molecule counts for each client
+        protein (str): the client protein which is being plotted
+        palette (str): colour to plot
+        output_folder (str): where to save
+    """
     dfmelt=pd.melt(df, id_vars=['Timepoint','Protein', 'Colocalisation', 'Molecule_number', 'Pair', 'incubated', 'start_end', 'last_step_mol_count'], value_vars=['log_count'])
 
     fig, ax = plt.subplots()

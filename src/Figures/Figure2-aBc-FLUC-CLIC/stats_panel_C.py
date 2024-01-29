@@ -34,6 +34,7 @@ def kruskal_wallis_start_finish(treatment, df):
     print(results)
 
     return start, end
+
 if __name__ == "__main__":
     # read in here the dfs 'Clic.csv' and 'fluc.csv' and aB-c.csv (these have the number of molecules for each of these proteins)
     input_folder='data/Figures/Figure_2/C-violinplots/'
