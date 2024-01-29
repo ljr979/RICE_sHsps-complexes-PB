@@ -1,4 +1,4 @@
-"""finds from colocalisation data, the % of client proteins which are colocalised with a sHsp. Plots over time
+"""finds from colocalisation data, the % of client proteins which are colocalised with a sHsp. Plots over time. This script needs to have both NON-COLOC and COLOC molecules run through py4bleaching to be accurate. If not, it will give out 100% colocalisation as the non-colocalised molecules will be excluded.
 
 
 """
@@ -20,19 +20,13 @@ def collate(data_files):
     """
     molecules = []
     for filepath in data_files:
-
+        filepath = filepath.replace('\\', '/')
         data = pd.read_csv(filepath)
         data.drop([col for col in data.columns.tolist()
                    if ' ' in col], axis=1, inplace=True)
 
-        data[['timepoint-protein', 'colocalisation', 'protein', 'number']
+        data[['unique_num', 'timepoint', 'colocalisation', 'protein', 'num']
              ] = data['molecule_number'].str.split('_', expand=True)
-        data[['timepoint', 'protein2', 'fill']
-             ] = data['timepoint-protein'].str.split('-', expand=True)
-        data.drop([col for col in data.columns.tolist()
-                   if 'protein2' in col], axis=1, inplace=True)
-        data.drop([col for col in data.columns.tolist()
-                   if 'fill' in col], axis=1, inplace=True)
 
         molecules.append(data)
 
@@ -153,12 +147,12 @@ def scatter_plot_client(for_plotting, output_folder):
 
 
 if __name__ == "__main__":    
-    input_folder = 'data/example_python_output/two-colour/'
+    input_folder = 'data/'
     output_folder = 'python_results/colocalisation/'
 
+    # if not os.path.exists(output_folder):
+    #     os.makedirs(output_folder)
 
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
     #this dataframe contains ALL trajectories from both proteins, and the metadata so I can grab specific ones later if required
     #find the df containing cleaned colocalisation data
     data_files = [[f'{root}/{filename}' for filename in files if 'cleaned_data.csv' in filename]for root, dirs, files in os.walk(f'{input_folder}')]
@@ -170,9 +164,8 @@ if __name__ == "__main__":
 
 
     #split big df into hsp and client again
-    shsp = molecules[molecules["protein"] == "hsp27"]
-    client = molecules[molecules['protein'] == 'FLUC']
-
+    shsp = molecules[molecules["protein"] == "hsp"]
+    client = molecules[molecules['protein'] == 'client']
     zero = []
     fifteen = []
     thirty = []
