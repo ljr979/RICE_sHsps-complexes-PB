@@ -1,6 +1,6 @@
 """runs py4bleaching on trajectories that have been matched
 """
-from src.utilities.pb.py4bleaching import analysis
+from utilities.pb.py4bleaching.py4bleaching import analysis
 
 #input is the path to the imagejresults folder containing trajectories files. output_folder is python_results and whatever treatment you want it to be nested within
 input_folder = 'data/example_python_output/two-colour/0_matching_trajectories/'
