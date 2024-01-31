@@ -1,10 +1,22 @@
 cff-version: 1.0.0
 message: "If you use this respository, please cite the manuscript alongside the following:"
 authors:
-  - family-names: 
-    given-names: 
-    orcid: https://orcid.org/
-title: ""
+  - family-names: Rice
+    given-names: Lauren
+    orcid: https://orcid.org/0000-0002-4266-7837
+    - family-names: Marzano
+    given-names: Nicholas
+    orcid: https://orcid.org/0000-0002-8436-8683
+  - family-names: Cox
+    given-names: Dezerae
+    orcid: https://orcid.org/0000-0002-5345-8360
+  - family-names: Ecroyd
+    given-names: Heath
+    orcid: orcid.org/0000-0001-7574-0044]orcid.org/0000-0001-7574-0044
+
+
+title: "RICE_sHsp-complexes-PB"
 version: 1.0
-doi: 
-date-released: 
+doi: NA
+date-released: 2024-02-
+url: "https://github.com/ljr979/RICE_sHsps-complexes-PB'
