@@ -9,13 +9,13 @@ This manuscript has been submitted as a preprint via BioRxiv [here](biorxiv/link
 
 This analysis assumes a standard installation of Python 3 (=> **3.7.10**), and ImageJ =>**v1.53c**. For specific package requirements, see the environment.yml file, or  create a new conda environment containing all packages by running ```conda create -f environment.yml```. In addition to the analysis contained here, the simple statistical tests & data fitting in Figure 1 were performed using [GraphPad Prism v **9.0**](https://www.graphpad.com/scientific-software/prism/).
 
-For ImageJ processing, the required plugins and macros can be found in 0_imagej-processing/macros-required/ and should be transferred into the ImageJ plugins folder.
+For ImageJ processing, the required plugins and macros can be found in ```0_imagej-processing/macros-required/``` and should be transferred into the ImageJ plugins folder.
 
 ## Raw data
 
 For convenience, example datasets are provided here under the ```data``` folder. These data may be used to explore the workflows presented here as described below.
 
-In addition, data used to generate each of the figures in this work, have been uploaded as an open-access [Zenodo dataset](https://doi.org/###/zenodo.###). These datasets can be collected automatically using the ```raw_data.py``` script in each of the respective analysis folders.
+In addition, data used to generate each of the figures in this work, as well as unprocessed data to use to explore the data processing workflow provided here, have been uploaded as an open-access [Zenodo dataset](https://doi.org/10.5281/zenodo.10602864). These datasets can be collected automatically using the ```raw_data.py``` script in each of the respective analysis folders.
 
 ## Workflow
 
@@ -51,4 +51,4 @@ In addition, each figure can be generated using the scripts provided under the `
 
 [1]: my/really/cool/link
 
-1. Reference Paper (2020) Really Cool Paper. **High Impact Journal**. https://doi.org/####/####
+1. Schneider, C. A., Rasband, W. S., & Eliceiri, K. W. (2012). NIH Image to ImageJ: 25 years of image analysis. 9(7), 671–675. **Nature Methods**. https://doi.org/10.1038/nmeth.2089
