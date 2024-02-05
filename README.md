@@ -1,7 +1,7 @@
 
 # RICE_sHsps-complexes-PB
 
-This repository contains the analysis code associated with the sHsp complexes project, led by Professor Heath Ecroyd. This manuscript has been submitted for publication under the title **"Single-molecule studies of αB-c and Hsp27 in complex with amorphously aggregating client proteins"**.
+This repository contains the analysis code associated with the sHsp complexes project, led by Professor Heath Ecroyd. This manuscript has been submitted for publication under the title **"Single-molecule observations of αB-c and Hsp27 in complex with amorphously aggregating client proteins"**.
 
 This manuscript has been submitted as a preprint via BioRxiv [here](biorxiv/link). A link to the final version will be provided upon publication.
 
